@@ -1,14 +1,9 @@
 {
-  "name": "lockyz-bot",
+  "name": "joiboi-canary",
   "version": "2.0.0",
-  "prefix": "?",
-  "supportS": "https://discord.gg/eRPsZns",
-  "bName": "Test Bot",
-  "base": "3.0.0b",
-  "dev": "Lockyz",
-  "commby": "Lockyz",
-  "description": "The Bot for the Lockyz Group of Servers.",
-  "main": "index.js",
+  "dev": "Lockyz Dev",
+  "description": "A multipurpose bot, Joiboi is created to make the lives of everyone on Discord better.",
+  "main": "joiboiC.js",
   "scripts": {
     "start": "node .",
     "test": "eslint .",
@@ -20,18 +15,12 @@
     "type": "git",
     "url": "https://github.com/acollierr17/discord.js-template"
   },
-  "keywords": [
-    "template",
-    "discord.js",
-    "discord",
-    "bot"
-  ],
-  "author": "acollierr17 <gamemaniac101@gmail.com>",
+  "author": "Lockyz <lochlanpainter@gmail.com>",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/acollierr17/discord.js-template/issues"
+    "url": "http://tracker.lockyzdev.net/"
   },
-  "homepage": "https://github.com/acollierr17/discord.js-template#README.md",
+  "homepage": "https://lockyzdev.net/joiboi",
   "dependencies": {
     "better-sqlite3": "^7.4.3",
     "chalk": "^4.1.0",
