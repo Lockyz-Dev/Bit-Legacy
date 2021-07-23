@@ -61,9 +61,9 @@ typings/
 .next
 
 # Other
+config.js
 data/
 package-lock.json
 nodemon.json
 commands/beta.js
-config.js
-config.js
+.gitignore
