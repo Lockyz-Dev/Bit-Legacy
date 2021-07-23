@@ -66,4 +66,4 @@ data/
 package-lock.json
 nodemon.json
 commands/beta.js
-.gitignore
+bot.sqlite
