@@ -74,43 +74,4 @@ const init = async () => {
 	client.login(`${config.token}`);
 };
 
-client.ws.on('INTERACTION_CREATE', async interaction => {
-	//8Ball
-	if(interaction.data.id === '821343111778664479') {
-	  var roll = [
-		"Yes",
-		"No",
-		"Likely",
-		"Not Likely",
-		"I can't give an answer now"
-	  ]
-	  var randomAnswer = roll[Math.floor(Math.random() * roll.length)];
-	  client.api.interactions(interaction.id, interaction.token).callback.post({
-		data: {
-		  type: 4,
-		  data: {
-			content: randomAnswer
-		  },
-		},
-	  });
-	}
-	//CoinFlip
-	if(interaction.data.id === '821343553354596373') {
-	  var roll1 = [
-		"Heads",
-		"Tails"
-	  ]
-	  var randomAnswer = roll1[Math.floor(Math.random() * roll1.length)];
-	  client.api.interactions(interaction.id, interaction.token).callback.post({
-		data: {
-		  type: 4,
-		  data: {
-			content: randomAnswer
-		  },
-		},
-	  });
-	}
-  })
-  
-
 init();

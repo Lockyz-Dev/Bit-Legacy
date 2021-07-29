@@ -145,39 +145,44 @@ module.exports = async (client, message) => {
 			default:
 				switch (cmd.help.metrics) {
 					case 'true':
-						if(genSet.metrics === "true") {
-							const SQLite = require("better-sqlite3");
-							const sql = new SQLite('../premium.sqlite');
+						try{
+							if(genSet.metrics === "true") {
+								const SQLite = require("better-sqlite3");
+								const sql = new SQLite('../premium.sqlite');
 			
-							const table = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'commandmetrics';").get();
-							client.getMetrics = sql.prepare("SELECT * FROM commandmetrics WHERE command = ?");
-							client.setMetrics = sql.prepare("INSERT OR REPLACE INTO commandmetrics (command, usecount, servers) VALUES (@command, @usecount, @servers);");
+								const table = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'commandmetrics';").get();
+								client.getMetrics = sql.prepare("SELECT * FROM commandmetrics WHERE command = ?");
+								client.setMetrics = sql.prepare("INSERT OR REPLACE INTO commandmetrics (command, usecount, servers) VALUES (@command, @usecount, @servers);");
 				
-							let metrics;
+								let metrics;
 				
-							metrics = client.getMetrics.get(cmd.help.name);
+								metrics = client.getMetrics.get(cmd.help.name);
 				
-							if(!metrics) {
-								metrics = { command: cmd.help.name, usecount: 1, servers: 1 };
+								if(!metrics) {
+									metrics = { command: cmd.help.name, usecount: 1, servers: 1 };
+									client.setMetrics.run(metrics);
+									cmd.run(client, message, args);
+									return;
+								}
+				
+								const pointsToAdd = 1
+								metrics.usecount += pointsToAdd;
+
 								client.setMetrics.run(metrics);
-								cmd.run(client, message, args);
-								return;
 							}
-				
-							const pointsToAdd = 1
-							metrics.usecount += pointsToAdd;
-	
-							//If a command reaches ~1000 uses send a message to a specific channel on Lockyz's Server
-							if(metrics.usecount === 1000) {
-								client.channels.cache.get('812107709524082728').send(message.author.username+' has gotten the '+cmd.help.name+' to '+metrics.usecount+' uses.\nMy Creator Lochlan "Lockyz" Painter will run a giveaway as soon as he notices.');
-							}
-				
-							client.setMetrics.run(metrics);
+							cmd.run(client, message, args);
 						}
-						cmd.run(client, message, args);
+						catch(error) {
+							message.channel.send(error)
+						}
 					break;
 					case 'false':
-						cmd.run(client, message, args)
+						try {
+							cmd.run(client, message, args)
+						}
+						catch(error) {
+							message.channel.send(error)
+						}
 					break;
 				}
 			}

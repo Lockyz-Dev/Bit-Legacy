@@ -26,7 +26,7 @@ exports.run = async (client, message, args) => {
 
     const table1 = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'generalSettings';").get();
 	client.getgenSet = sql.prepare("SELECT * FROM generalSettings WHERE guildID = ?");
-    client.setgenSet = sql.prepare("INSERT OR REPLACE INTO generalSettings (guildID, prefix, gwayEmote, metrics, level, spam-prevention, ticket-system, invite-tracking, leave-notifs, show-news) VALUES (@guildID, @prefix, @gwayEmote, @metrics, @level, @spam-prevention, @ticket-system, @invite-tracking, @leave-notifs, @show-news);");
+    client.setgenSet = sql.prepare("INSERT OR REPLACE INTO generalSettings (guildID, prefix, gwayEmote, metrics, level, spam, ticket, invite, leave, news) VALUES (@guildID, @prefix, @gwayEmote, @metrics, @level, @spam, @ticket, @invite, @leave, @news);");
     
 	let genSet;
 	
@@ -152,19 +152,19 @@ exports.run = async (client, message, args) => {
                                 return;
                             }
                         return;
-                        case 'spam-prevention':
+                        case 'spam':
                             message.channel.send('This option hasn\'t been setup yet.')
                         return;
-                        case 'ticket-system':
+                        case 'ticket':
                             message.channel.send('This option hasn\'t been setup yet.')
                         return;
-                        case 'invite-tracking':
+                        case 'invite':
                             message.channel.send('This option hasn\'t been setup yet.')
                         return;
-                        case 'leave-notifs':
+                        case 'leave':
                             message.channel.send('This option hasn\'t been setup yet.')
                         return;
-                        case 'show-news':
+                        case 'news':
                             message.channel.send('This option hasn\'t been setup yet.')
                         return;
                         default:
@@ -252,11 +252,11 @@ exports.run = async (client, message, args) => {
                     generalEmbed.addField('gwayEmote', 'Not Finished', true)
                     generalEmbed.addField('metrics', genSet.metrics, true)
                     generalEmbed.addField('level', genSet.level, true)
-                    generalEmbed.addField('spam-prevention', 'Not Finished', true)
-                    generalEmbed.addField('ticket-system', 'Not Finished', true)
-                    generalEmbed.addField('invite-tracking', 'Not Finished', true)
-                    generalEmbed.addField('leave-notifs', 'Not Finished', true)
-                    generalEmbed.addField('show-news', 'Not Finished', true)
+                    generalEmbed.addField('spam', 'Not Finished', true)
+                    generalEmbed.addField('ticket', 'Not Finished', true)
+                    generalEmbed.addField('invite', 'Not Finished', true)
+                    generalEmbed.addField('leave', 'Not Finished', true)
+                    generalEmbed.addField('news', 'Not Finished', true)
                     const roleEmbed = new MessageEmbed()
                         .setTitle('Role Settings')
                         .setDescription(genSet.prefix+'settings role {option} {Role ID or false}')
@@ -299,15 +299,15 @@ exports.run = async (client, message, args) => {
                         .setDescription('Not Finished')
                         .setColor(embedColor)
                     //infoEmbed.addField('Message Settings', 'Not Finished')
-                    infoEmbed.addField('welcome-text', 'Not Finished', true)
-                    infoEmbed.addField('leave-text', 'Not Finished', true)
+                    infoEmbed.addField('welcome', 'Not Finished', true)
+                    infoEmbed.addField('leave', 'Not Finished', true)
                     const userEmbed = new MessageEmbed()
                         .setTitle('User Settings')
                         .setDescription('Not Finished')
                         .setColor(embedColor)
                     //userEmbed.addField('User Settings', 'Not Finished')
                     userEmbed.addField('track-metrics', 'Not Finished', true)
-                    userEmbed.addField('show-news', 'Not Finished', true)
+                    userEmbed.addField('news', 'Not Finished', true)
                     userEmbed.addField('level-system', 'Not Finished', true)
                     userEmbed.addField('levelup-notifs', 'Not Finished', true)
                     userEmbed.addField('nodata-collection', 'Not Finished', true)
