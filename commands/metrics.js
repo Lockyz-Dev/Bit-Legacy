@@ -57,5 +57,6 @@ exports.help = {
     usage: 'metrics {Command}',
     premium: 'false',
     metrics: 'true',
-    category: 'info'
+    category: 'info',
+    datause: 'false'
 };

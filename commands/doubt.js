@@ -19,5 +19,6 @@ exports.help = {
     usage: 'doubt',
     premium: 'false',
     metrics: 'true',
-    category: 'fun'
+    category: 'fun',
+    datause: 'false'
 };

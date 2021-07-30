@@ -58,5 +58,6 @@ exports.help = {
     usage: 'ban {User} {Reason}',
     premium: 'false',
     metrics: 'true',
-    category: 'moderation'
+    category: 'moderation',
+    datause: 'false'
 };

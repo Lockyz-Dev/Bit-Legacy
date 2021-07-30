@@ -44,7 +44,7 @@ exports.run = async (client, message, args) => {
         //Send the Embed
         return message.channel.send(embed);
     }
-    message.delete(1000);
+    message.delete();
 };
 
 exports.help = {
@@ -54,5 +54,6 @@ exports.help = {
     usage: 'points',
     premium: 'false',
     metrics: 'true',
-    category: 'level'
+    category: 'level',
+    datause: 'true'
 };

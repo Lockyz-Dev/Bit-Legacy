@@ -47,5 +47,6 @@ exports.help = {
     usage: 'serverinfo',
     premium: 'false',
     metrics: 'true',
-    category: 'info'
+    category: 'info',
+    datause: 'false'
 };

@@ -36,5 +36,6 @@ exports.help = {
     usage: '8ball {question}',
     premium: 'false',
     metrics: 'true',
-    category: 'fun'
+    category: 'fun',
+    datause: 'false'
 };

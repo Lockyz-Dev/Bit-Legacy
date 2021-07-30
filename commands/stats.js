@@ -38,5 +38,6 @@ exports.help = {
     usage: 'stats',
     premium: 'false',
     metrics: 'true',
-    category: 'info'
+    category: 'info',
+    datause: 'false'
 };

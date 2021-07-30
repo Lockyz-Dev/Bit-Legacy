@@ -53,5 +53,6 @@ exports.help = {
     usage: 'gend {Stuffs}',
     premium: 'false',
     metrics: 'true',
-    category: 'giveaway'
+    category: 'giveaway',
+    datause: 'false'
 };

@@ -90,5 +90,6 @@ exports.help = {
     usage: 'help',
     premium: 'false',
     metrics: 'false',
-    category: 'info'
+    category: 'info',
+    datause: 'false'
 };

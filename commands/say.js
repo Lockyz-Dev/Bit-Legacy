@@ -40,5 +40,6 @@ exports.help = {
     usage: 'say {message}',
     premium: 'false',
     metrics: 'true',
-    category: 'moderation'
+    category: 'moderation',
+    datause: 'false'
 };

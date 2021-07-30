@@ -57,5 +57,6 @@ exports.help = {
     usage: 'mute <username>',
     premium: 'false',
     metrics: 'true',
-    category: 'moderation'
+    category: 'moderation',
+    datause: 'false'
 };

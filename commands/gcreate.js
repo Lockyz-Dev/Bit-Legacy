@@ -70,5 +70,6 @@ exports.help = {
     usage: 'gcreate {Channel Mention} {Duration} {Number of Winners} {Prize}',
     premium: 'false',
     metrics: 'true',
-    category: 'giveaway'
+    category: 'giveaway',
+    datause: 'false'
 };

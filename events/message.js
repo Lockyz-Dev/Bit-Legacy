@@ -48,6 +48,19 @@ module.exports = async (client, message) => {
 		client.setroleSet.run(roleSet);
 	}
 
+	const table3 = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'userSettings';").get();
+	client.getuserSet = sql.prepare("SELECT * FROM userSettings WHERE userID = ?");
+    client.setuserSet = sql.prepare("INSERT OR REPLACE INTO userSettings (userID, metrics, levels, news, levelNotifs, dataCollect) VALUES (@userID, @metrics, @levels, @news, @levelNotifs, @dataCollect);");
+    
+	let userSet;
+	
+	userSet = client.getuserSet.get(message.author.id);
+
+	if(!userSet) {
+		userSet = { userID: message.author.id, metrics: "true", levels: 'true', news: 'true', levelNotifs: 'true', dataCollect: 'false' };
+		client.setuserSet.run(userSet);
+	}
+
 	if (message.author.bot) return;
 	if(chanSet.suggestID === message.channel.id) {
         const embed = new MessageEmbed()
@@ -90,8 +103,9 @@ module.exports = async (client, message) => {
 
 	const cmd = client.commands.get(command) || client.commands.get(client.aliases.get(command));
 	
-	if(genSet.level = 'true') {
+	if(genSet.level === 'true') {
     if (!cmd) {
+		if(userSet.levels === 'true') {
 		const cooldowns = new Map();
 		const table = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'scores';").get();
 		client.getScore = sql.prepare("SELECT * FROM scores WHERE user = ? AND guild = ?");
@@ -127,12 +141,14 @@ module.exports = async (client, message) => {
   			//Level up!
 			score.level++;
 			//SEND THE TADA EMOTE BOT
-			message.channel.send(`🎉${message.author.username} you've leveled up to level **${curLevel}**! Congrats🎉`);
+			if(userSet.levelNotifs === 'true') {
+				message.channel.send(`🎉${message.author.username} you've leveled up to level **${curLevel}**! Congrats🎉`);
+			}
 		}
 
 		client.setScore.run(score);
 			return;
-		}
+		}}
 	}
 
 	if (message.content.indexOf(newPrefix) !== 0) return;
@@ -147,30 +163,40 @@ module.exports = async (client, message) => {
 					case 'true':
 						try{
 							if(genSet.metrics === "true") {
-								const SQLite = require("better-sqlite3");
-								const sql = new SQLite('../premium.sqlite');
+								if(userSet.metrics === 'true') {
+									const SQLite = require("better-sqlite3");
+									const sql = new SQLite('../premium.sqlite');
 			
-								const table = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'commandmetrics';").get();
-								client.getMetrics = sql.prepare("SELECT * FROM commandmetrics WHERE command = ?");
-								client.setMetrics = sql.prepare("INSERT OR REPLACE INTO commandmetrics (command, usecount, servers) VALUES (@command, @usecount, @servers);");
+									const table = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'commandmetrics';").get();
+									client.getMetrics = sql.prepare("SELECT * FROM commandmetrics WHERE command = ?");
+									client.setMetrics = sql.prepare("INSERT OR REPLACE INTO commandmetrics (command, usecount, servers) VALUES (@command, @usecount, @servers);");
 				
-								let metrics;
+									let metrics;
 				
-								metrics = client.getMetrics.get(cmd.help.name);
+									metrics = client.getMetrics.get(cmd.help.name);
 				
-								if(!metrics) {
-									metrics = { command: cmd.help.name, usecount: 1, servers: 1 };
-									client.setMetrics.run(metrics);
-									cmd.run(client, message, args);
-									return;
-								}
+									if(!metrics) {
+										metrics = { command: cmd.help.name, usecount: 1, servers: 1 };
+										client.setMetrics.run(metrics);
+										cmd.run(client, message, args);
+										return;
+									}
 				
-								const pointsToAdd = 1
-								metrics.usecount += pointsToAdd;
+									const pointsToAdd = 1
+									metrics.usecount += pointsToAdd;
 
-								client.setMetrics.run(metrics);
+									client.setMetrics.run(metrics);
+								}
 							}
-							cmd.run(client, message, args);
+							if(userSet.dataCollect === "false") {
+								if(cmd.help.datause === "true") {
+									message.channel.send('This Command requires data collection to be enabled.\nYou can enable data collection by using '+'`'+prefix+'settings user dataCollect true`')
+								} else {
+									cmd.run(client, message, args);
+								}
+							} else {
+								cmd.run(client, message, args);
+							}
 						}
 						catch(error) {
 							message.channel.send(error)
@@ -178,7 +204,15 @@ module.exports = async (client, message) => {
 					break;
 					case 'false':
 						try {
-							cmd.run(client, message, args)
+							if(userSet.dataCollect === "false") {
+								if(cmd.help.datause === "true") {
+									message.channel.send('This Command requires data collection to be enabled.\nYou can enable data collection by using '+'`'+prefix+'settings user dataCollect true`')
+								} else {
+									cmd.run(client, message, args);
+								}
+							} else {
+								cmd.run(client, message, args);
+							}
 						}
 						catch(error) {
 							message.channel.send(error)

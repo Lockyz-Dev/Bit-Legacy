@@ -51,5 +51,6 @@ exports.help = {
     usage: 'greroll {Stuffs}',
     premium: 'false',
     metrics: 'true',
-    category: 'giveaway'
+    category: 'giveaway',
+    datause: 'false'
 };

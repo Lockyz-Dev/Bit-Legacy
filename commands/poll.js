@@ -29,5 +29,6 @@ exports.help = {
     usage: 'poll {Description}',
     premium: 'false',
     metrics: 'true',
-    category: 'fun'
+    category: 'fun',
+    datause: 'false'
 };

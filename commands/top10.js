@@ -49,5 +49,6 @@ exports.help = {
     usage: 'top10',
     premium: 'false',
     metrics: 'true',
-    category: 'level'
+    category: 'level',
+    datause: 'true'
 };

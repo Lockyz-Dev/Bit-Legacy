@@ -12,5 +12,6 @@ exports.help = {
     usage: 'ping',
     premium: 'false',
     metrics: 'true',
-    category: 'info'
+    category: 'info',
+    datause: 'false'
 };

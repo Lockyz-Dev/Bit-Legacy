@@ -31,5 +31,6 @@ exports.help = {
     usage: 'roll {number}',
     premium: 'false',
     metrics: 'true',
-    category: 'fun'
+    category: 'fun',
+    datause: 'false'
 };

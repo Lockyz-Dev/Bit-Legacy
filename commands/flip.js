@@ -30,5 +30,6 @@ exports.help = {
     usage: 'flip',
     premium: 'false',
     metrics: 'true',
-    category: 'fun'
+    category: 'fun',
+    datause: 'false'
 };

@@ -27,5 +27,6 @@ exports.help = {
     usage: 'invite {use number} {Time}',
     premium: 'false',
     metrics: 'true',
-    category: 'info'
+    category: 'info',
+    datause: 'false'
 };

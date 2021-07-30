@@ -61,9 +61,10 @@ typings/
 .next
 
 # Other
-config.js
 data/
 package-lock.json
 nodemon.json
 commands/beta.js
 bot.sqlite
+procfile
+config.js

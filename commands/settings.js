@@ -40,10 +40,88 @@ exports.run = async (client, message, args) => {
 	
 	roleSet = client.getroleSet.get(guild.id);
 
-        if(message.author.id === message.guild.ownerID || message.member.roles.cache.has(roleSet.adminID) || message.member.hasPermission('ADMINISTRATOR') || message.member.hasPermission('MANAGE_GUILD')) {
-        
+    const table3 = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'userSettings';").get();
+	client.getuserSet = sql.prepare("SELECT * FROM userSettings WHERE userID = ?");
+    client.setuserSet = sql.prepare("INSERT OR REPLACE INTO userSettings (userID, metrics, levels, news, levelNotifs, dataCollect) VALUES (@userID, @metrics, @levels, @news, @levelNotifs, @dataCollect);");
+    
+	let userSet;
+	
+	userSet = client.getuserSet.get(message.author.id);
+
+    const prefix = genSet.prefix;
+
             switch (args[0]) {
+                case 'user':
+                    switch(args[1]) {
+                        case 'data-collect':
+                            if(args[2] === 'true') {
+                                userSet.dataCollect = 'true'
+                                client.setuserSet.run(userSet)
+                                message.channel.send('Done')
+                            } else if(args[2] === 'false') {
+                                userSet.dataCollect = 'false'
+                                client.setuserSet.run(userSet)
+                                message.channel.send('Done')
+                            } else {
+                                message.channel.send('That\'s an invalid option')
+                            }
+                        return;
+                        case 'levels':
+                            if(args[2] === 'true') {
+                                userSet.levels = 'true'
+                                client.setuserSet.run(userSet)
+                                message.channel.send('Done')
+                            } else if(args[2] === 'false') {
+                                userSet.levels = 'false'
+                                client.setuserSet.run(userSet)
+                                message.channel.send('Done')
+                            } else {
+                                message.channel.send('That\'s an invalid option')
+                            }
+                        return;
+                        case 'metrics':
+                            if(args[2] === 'true') {
+                                userSet.metrics = 'true'
+                                client.setuserSet.run(userSet)
+                                message.channel.send('Done')
+                            } else if(args[2] === 'false') {
+                                userSet.metrics = 'false'
+                                client.setuserSet.run(userSet)
+                                message.channel.send('Done')
+                            } else {
+                                message.channel.send('That\'s an invalid option')
+                            }
+                        return;
+                        case 'levelNotifs':
+                            if(args[2] === 'true') {
+                                userSet.levelNotifs = 'true'
+                                client.setuserSet.run(userSet)
+                                message.channel.send('Done')
+                            } else if(args[2] === 'false') {
+                                userSet.levelNotifs = 'false'
+                                client.setuserSet.run(userSet)
+                                message.channel.send('Done')
+                            } else {
+                                message.channel.send('That\'s an invalid option')
+                            }
+                        return;
+                        default:
+                            const userEmbed = new MessageEmbed()
+                                .setTitle('User Settings')
+                                .setDescription(prefix+'settings user {Setting} {Option}')
+                                .setColor(embedColor)
+                                //userEmbed.addField('User Settings', 'Not Finished')
+                                userEmbed.addField('metrics', userSet.metrics, true)
+                                userEmbed.addField('news', 'Not Finished', true)
+                                userEmbed.addField('levels', userSet.levels, true)
+                                userEmbed.addField('levelNotifs', userSet.levelNotifs, true)
+                                userEmbed.addField('data-collect', userSet.dataCollect, true)
+                            message.channel.send(userEmbed);
+                        return;
+                    }
+                return;
                 case 'channel':
+                    if(message.author.id === message.guild.ownerID || message.member.roles.cache.has(roleSet.adminID) || message.member.hasPermission('ADMINISTRATOR') || message.member.hasPermission('MANAGE_GUILD')) {
                     switch (args[1]) {
                         case 'logs':
                             switch (args[2]) {
@@ -95,10 +173,32 @@ exports.run = async (client, message, args) => {
                             }
                         return;
                         default:
-                            message.channel.send('You need to enter a channel Type')
-                            return;
+                            const channelEmbed = new MessageEmbed()
+                                .setTitle('Channel Settings')
+                                .setDescription(`Change Guild Settings\n`+genSet.prefix+'settings channel {option} {Channel ID or false}')
+                                .setColor(embedColor)
+                            if(chanSet.logsID === 'false') {
+                                channelEmbed.addField('logs', 'Disabled', true)
+                            } else {
+                                channelEmbed.addField('logs', '<#'+chanSet.logsID+'>', true)
+                            }
+                            if(chanSet.welcomeID === 'false') {
+                                channelEmbed.addField('welcome', 'Disabled', true)    
+                            } else{
+                                channelEmbed.addField('welcome', '<#'+chanSet.welcomeID+'>', true)
+                            }
+                            if(chanSet.suggestID === 'false') {
+                                channelEmbed.addField('suggestions', 'Disabled', true)
+                            } else {
+                                channelEmbed.addField('suggestions', '<#'+chanSet.suggestID+'>', true)
+                            }
+                            message.channel.send(channelEmbed);
+                        return;
+                    }} else {
+                        message.channel.send('You don\'t have permission to use this category.')
                     }
                 case 'general':
+                    if(message.author.id === message.guild.ownerID || message.member.roles.cache.has(roleSet.adminID) || message.member.hasPermission('ADMINISTRATOR') || message.member.hasPermission('MANAGE_GUILD')) {
                     switch (args[1]) {
                         case null:
                             message.channel.send('You NEED to enter a value')
@@ -168,11 +268,28 @@ exports.run = async (client, message, args) => {
                             message.channel.send('This option hasn\'t been setup yet.')
                         return;
                         default:
-                            message.channel.send('Please enter a valid value!')
+                            const generalEmbed = new MessageEmbed()
+                                .setTitle('General Settings')
+                                .setDescription(genSet.prefix+'settings general {setting} <Additional Options>')
+                                .setColor(embedColor)
+                            //generalEmbed.addField('General Settings', genSet.prefix+'settings general {setting} <Additional Options>')
+                            generalEmbed.addField('prefix', genSet.prefix, true)
+                            generalEmbed.addField('gwayEmote', 'Not Finished', true)
+                            generalEmbed.addField('metrics', genSet.metrics, true)
+                            generalEmbed.addField('level', genSet.level, true)
+                            generalEmbed.addField('spam', 'Not Finished', true)
+                            generalEmbed.addField('ticket', 'Not Finished', true)
+                            generalEmbed.addField('invite', 'Not Finished', true)
+                            generalEmbed.addField('leave', 'Not Finished', true)
+                            generalEmbed.addField('news', 'Not Finished', true)
+                            message.channel.send(generalEmbed);
                         return;
+                    }} else {
+                        message.channel.send('You don\'t have permission to use this category.')
                     }
                 return;
                 case 'role':
+                    if(message.author.id === message.guild.ownerID || message.member.roles.cache.has(roleSet.adminID) || message.member.hasPermission('ADMINISTRATOR') || message.member.hasPermission('MANAGE_GUILD')) {
                     switch (args[1]) {
                         case null:
                             message.channel.send('You need to enter a role type')
@@ -219,61 +336,68 @@ exports.run = async (client, message, args) => {
                             }
                         return;
                         default:
-                            message.channel.send('Please choose a valid role type!')
+                            const roleEmbed = new MessageEmbed()
+                                .setTitle('Role Settings')
+                                .setDescription(genSet.prefix+'settings role {option} {Role ID or false}')
+                                .setColor(embedColor)
+                            //roleEmbed.addField('Role Settings', genSet.prefix+'settings role {option} {Role ID or false}')
+                            if(roleSet.adminID === "false") {
+                                roleEmbed.addField('admin', 'Unset', true)
+                            } else {
+                                roleEmbed.addField('admin', '<@'+roleSet.adminID+'>', true)
+                            }
+                            roleEmbed.addField('mod', 'Not Finished', true)
+                            roleEmbed.addField('mute', 'Not Finished', true)
+                            if(roleSet.autoID === "false") {
+                                roleEmbed.addField('auto', 'Unset', true)
+                            } else {
+                                roleEmbed.addField('auto', '<@'+roleSet.autoID+'>', true)
+                            }
+                            message.channel.send(roleEmbed);
                         return;
+                    }} else {
+                        message.channel.send('You don\'t have permission to use this category.')
                     }
                 return;
+                case 'bot':
+                    if(message.author.id === "835394949612175380") {
+                        const botEmbed = new MessageEmbed()
+                            botEmbed.setTitle('Bot Settings')
+                            botEmbed.setDescription('Not Finished')
+                            botEmbed.setColor(embedColor)
+                            //botEmbed.addField('Bot Settings', 'Not Finished')
+                            botEmbed.addField('news-enabled', botSet.isNews, true)
+                            if(botSet.isNews === 'true') {
+                                botEmbed.addField('news-text', botSet.newsText, true)
+                                botEmbed.addField('news-title', botSet.newsTitle, true)
+                            }
+                            botEmbed.addField('presence-text', botSet.presenceName, true)
+                            botEmbed.addField('presence-type', botSet.presenceType, true)
+                            botEmbed.addField('presence-reset', 'Reset the Discord RPC', true)
+                            botEmbed.addField('default-prefix', botSet.prefix, true)
+                            botEmbed.addField('embed-colour', 'Not Finished', true)
+                            botEmbed.addField('your-id', botSet.ownerID, true)
+                            botEmbed.addField('main-guild', botSet.mainGuild, true)
+                        message.channel.send(botEmbed);
+                    } else {
+                        message.channel.send('You don\'t have permission to use this category.')
+                    }
                 default:
-                    const channelEmbed = new MessageEmbed()
-                        .setTitle('Channel Settings')
-                        .setDescription(`Change Guild Settings\n`+genSet.prefix+'settings channel {option} {Channel ID or false}')
-                        .setColor(embedColor)
-                    if(chanSet.logsID === 'false') {
-                        channelEmbed.addField('logs', 'Disabled', true)
-                    } else {
-                        channelEmbed.addField('logs', '<#'+chanSet.logsID+'>', true)
-                    }
-                    if(chanSet.welcomeID === 'false') {
-                        channelEmbed.addField('welcome', 'Disabled', true)    
-                    } else{
-                        channelEmbed.addField('welcome', '<#'+chanSet.welcomeID+'>', true)
-                    }
-                    if(chanSet.suggestID === 'false') {
-                        channelEmbed.addField('suggestions', 'Disabled', true)
-                    } else {
-                        channelEmbed.addField('suggestions', '<#'+chanSet.suggestID+'>', true)
-                    }
-                    const generalEmbed = new MessageEmbed()
-                        .setTitle('General Settings')
-                        .setDescription(genSet.prefix+'settings general {setting} <Additional Options>')
-                        .setColor(embedColor)
-                    //generalEmbed.addField('General Settings', genSet.prefix+'settings general {setting} <Additional Options>')
-                    generalEmbed.addField('prefix', genSet.prefix, true)
-                    generalEmbed.addField('gwayEmote', 'Not Finished', true)
-                    generalEmbed.addField('metrics', genSet.metrics, true)
-                    generalEmbed.addField('level', genSet.level, true)
-                    generalEmbed.addField('spam', 'Not Finished', true)
-                    generalEmbed.addField('ticket', 'Not Finished', true)
-                    generalEmbed.addField('invite', 'Not Finished', true)
-                    generalEmbed.addField('leave', 'Not Finished', true)
-                    generalEmbed.addField('news', 'Not Finished', true)
-                    const roleEmbed = new MessageEmbed()
-                        .setTitle('Role Settings')
-                        .setDescription(genSet.prefix+'settings role {option} {Role ID or false}')
-                        .setColor(embedColor)
-                    //roleEmbed.addField('Role Settings', genSet.prefix+'settings role {option} {Role ID or false}')
-                    if(roleSet.adminID === "false") {
-                        roleEmbed.addField('admin', 'Unset', true)
-                    } else {
-                        roleEmbed.addField('admin', '<@'+roleSet.adminID+'>', true)
-                    }
-                    roleEmbed.addField('mod', 'Not Finished', true)
-                    roleEmbed.addField('mute', 'Not Finished', true)
-                    if(roleSet.autoID === "false") {
-                        roleEmbed.addField('auto', 'false', true)
-                    } else {
-                        roleEmbed.addField('auto', '<@'+roleSet.autoID+'>', true)
-                    }
+                    const mainEmbed = new MessageEmbed()
+                        .setTitle('Setting Categories')
+                        .setDescription(prefix+'settings {category}')
+                        .addField('General Settings', prefix+'settings role', true)
+                        .addField('Channel Settings', prefix+'settings channel', true)
+                        .addField('Role Settings', prefix+'settings role', true)
+                        .addField('Message Settings', 'Not Finished', true)
+                        .addField('Logging Settings', 'Not Finished', true)
+                        .addField('User Settings', prefix+'settings user', true)
+                        if(message.author.id === "835394949612175380") {
+                            mainEmbed.addField('Bot Settings', prefix+'settings bot', user)
+                        }
+                    message.channel.send(mainEmbed)
+                /*
+                    //Log Settings
                     const logsEmbed = new MessageEmbed()
                     if(chanSet.logsID === 'false') {
                     } else {
@@ -294,6 +418,8 @@ exports.run = async (client, message, args) => {
                         logsEmbed.addField('role-delete', 'Not Finished', true)
                         logsEmbed.addField('role-update', 'Not Finished', true)
                     }
+
+                    //Message Settings
                     const infoEmbed = new MessageEmbed()
                         .setTitle('Message Settings')
                         .setDescription('Not Finished')
@@ -301,52 +427,13 @@ exports.run = async (client, message, args) => {
                     //infoEmbed.addField('Message Settings', 'Not Finished')
                     infoEmbed.addField('welcome', 'Not Finished', true)
                     infoEmbed.addField('leave', 'Not Finished', true)
-                    const userEmbed = new MessageEmbed()
-                        .setTitle('User Settings')
-                        .setDescription('Not Finished')
-                        .setColor(embedColor)
-                    //userEmbed.addField('User Settings', 'Not Finished')
-                    userEmbed.addField('track-metrics', 'Not Finished', true)
-                    userEmbed.addField('news', 'Not Finished', true)
-                    userEmbed.addField('level-system', 'Not Finished', true)
-                    userEmbed.addField('levelup-notifs', 'Not Finished', true)
-                    userEmbed.addField('nodata-collection', 'Not Finished', true)
-                    const botEmbed = new MessageEmbed()
-                    if(message.author.id === "835394949612175380") {
-                        botEmbed.setTitle('Bot Settings')
-                        botEmbed.setDescription('Not Finished')
-                        botEmbed.setColor(embedColor)
-                        //botEmbed.addField('Bot Settings', 'Not Finished')
-                        botEmbed.addField('news-enabled', botSet.isNews, true)
-                        if(botSet.isNews === 'true') {
-                            botEmbed.addField('news-text', botSet.newsText, true)
-                            botEmbed.addField('news-title', botSet.newsTitle, true)
-                        }
-                        botEmbed.addField('presence-text', botSet.presenceName, true)
-                        botEmbed.addField('presence-type', botSet.presenceType, true)
-                        botEmbed.addField('presence-reset', 'Reset the Discord RPC', true)
-                        botEmbed.addField('default-prefix', botSet.prefix, true)
-                        botEmbed.addField('embed-colour', 'Not Finished', true)
-                        botEmbed.addField('your-id', botSet.ownerID, true)
-                        botEmbed.addField('main-guild', botSet.mainGuild, true)
-                    }
-                    message.channel.send(channelEmbed);
-                    message.channel.send(generalEmbed);
-                    message.channel.send(roleEmbed);
                     if(chanSet.logsID === 'false') {
                     } else {
                         message.channel.send(logsEmbed);
                     }
-                    message.channel.send(infoEmbed);
-                    message.channel.send(userEmbed);
-                    if(message.author.id === "835394949612175380") {
-                        message.channel.send(botEmbed);
-                    }
+                    message.channel.send(infoEmbed);*/
                 return;
             }
-        } else {
-            message.channel.send(`You don't have permission to use this command.`)
-        }
 };
 
 exports.help = {
@@ -356,5 +443,6 @@ exports.help = {
     usage: 'settings {Setting Type} {Setting}',
     premium: 'false',
     metrics: 'false',
-    category: 'settings'
+    category: 'settings',
+    datause: 'false'
 };

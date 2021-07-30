@@ -57,5 +57,6 @@ exports.help = {
     aliases: [],
     description: 'Kick User for Reason',
     usage: 'kick {user} {Reason}',
-    category: 'moderation'
+    category: 'moderation',
+    datause: 'false'
 };

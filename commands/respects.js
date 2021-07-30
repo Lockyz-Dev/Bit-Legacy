@@ -20,5 +20,6 @@ exports.help = {
     usage: 'respects',
     premium: 'false',
     metrics: 'true',
-    category: 'fun'
+    category: 'fun',
+    datause: 'false'
 };

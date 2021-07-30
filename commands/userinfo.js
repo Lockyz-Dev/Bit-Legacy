@@ -8,39 +8,34 @@ exports.run = async (client, message, args) => {
     let perms = message.guild.me.permissions;
     if (!perms.has('EMBED_LINKS')) return noBotPerms(message, 'EMBED_LINKS');
 
-    //let userID = message.mentions.members.first || args[0] || message.author.id
-    if(!args.length) {
-      member = message.guild.member(message.author);
-      user = message.author
+    const taggedUser = message.mentions.users.first();
 
-      if(!member) {
-        return message.channel.send(`That user doesn't appear to be a member of this server or I cannot find them.`)
-      }
-      if(!user) {
-        return message.channel.send(`I couldn't find that user.`)
-      }
-    } else if (args[0] = NaN) {
-      member = message.guild.member(message.mentions.users.first())
-      user = member.user
-      
-      if(!member) {
-        return message.channel.send(`That user doesn't appear to be a member of this server or I cannot find them.`)
-      }
-      if(!user) {
-        return message.channel.send(`I couldn't find that user.`)
-      }
-    }
-     else {
-      member = message.guild.member(message.mentions.users.first())
-      user = message.guild.member(message.mentions.users.first()).user
+    var user;
 
-      if(!member) {
-        return message.channel.send(`That user doesn't appear to be a member of this server or I cannot find them.`)
-      }
-      if(!user) {
-        return message.channel.send(`I couldn't find that user.`)
-      }
+    if(!message.mentions.users.size) {
+        user = message.author.username
+    } else {
+        user = taggedUser.username
     }
+
+    const table3 = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'userSettings';").get();
+	client.getuserSet = sql.prepare("SELECT * FROM userSettings WHERE userID = ?");
+    client.setuserSet = sql.prepare("INSERT OR REPLACE INTO userSettings (userID, metrics, levels, news, levelNotifs, dataCollect) VALUES (@userID, @metrics, @levels, @news, @levelNotifs, @dataCollect);");
+    
+	let userSet;
+	
+	userSet = client.getuserSet.get(user.id);
+
+	if(!userSet) {
+		userSet = { userID: user.id, metrics: "true", levels: 'true', news: 'true', levelNotifs: 'true', dataCollect: 'false' };
+		client.setuserSet.run(userSet);
+	}
+
+    if(userSet.dataCollect === 'false') {
+        message.channel.send('Command could not be executed due to data collection being disabled.')
+        return;
+    }
+    
     const statsEmbed = new MessageEmbed()
       .setTitle('User Info')
       .setAuthor(client.user.username, client.user.avatarURL())
@@ -70,5 +65,6 @@ exports.help = {
     usage: 'userinfo {mention}',
     premium: 'false',
     metrics: 'true',
-    category: 'info'
+    category: 'info',
+    datause: 'true'
 };

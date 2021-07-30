@@ -45,5 +45,6 @@ exports.help = {
     usage: 'purge {amount}',
     premium: 'false',
     metrics: 'true',
-    category: 'moderation'
+    category: 'moderation',
+    datause: 'false'
 };
