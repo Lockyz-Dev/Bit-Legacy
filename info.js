@@ -1,7 +1,7 @@
 require('dotenv-flow').config();
 
 module.exports = {
-    version: "18072021",
+    version: "06082021",
     prefix: "!",
     supportS: "https://discord.gg/eRPsZns",
     bName: "JoiBoi Canary",
