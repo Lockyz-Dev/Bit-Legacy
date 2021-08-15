@@ -1,7 +1,6 @@
 const Discord = require('discord.js');
 
 exports.run = async (client, message, args) => {
-
     if(message.author.id === "100182453812985856") {
     const description = args.join(" ");
     message.delete(1000);
@@ -25,7 +24,7 @@ exports.run = async (client, message, args) => {
 exports.help = {
     name: 'poll',
     aliases: [],
-    description: 'Create a Poll',
+    description: 'Create a poll.',
     usage: 'poll {Description}',
     premium: 'false',
     metrics: 'true',

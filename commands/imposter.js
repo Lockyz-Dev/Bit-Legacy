@@ -34,8 +34,8 @@ exports.run = async (client, message, args) => {
 exports.help = {
     name: 'imposter',
     aliases: ['impostor', 'impasta'],
-    description: 'Find the Imposters',
-    usage: 'imposter',
+    description: 'Find the Impostor.',
+    usage: 'imposter [user]',
     premium: 'false',
     metrics: 'true',
     category: 'fun',

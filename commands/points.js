@@ -50,7 +50,7 @@ exports.run = async (client, message, args) => {
 exports.help = {
     name: 'points',
     aliases: ['pts', 'score'],
-    description: 'Get your points.',
+    description: 'Get your point and level count.',
     usage: 'points',
     premium: 'false',
     metrics: 'true',

@@ -55,8 +55,8 @@ exports.run = async (client, message, args) => {
 exports.help = {
     name: 'kick',
     aliases: [],
-    description: 'Kick User for Reason',
-    usage: 'kick {user} {Reason}',
+    description: 'Kick user for a specified reason.',
+    usage: 'kick {user} [Reason]',
     category: 'moderation',
     datause: 'false'
 };

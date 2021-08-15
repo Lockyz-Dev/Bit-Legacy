@@ -53,8 +53,8 @@ exports.run = async (client, message, args) => {
 exports.help = {
     name: 'mute',
     aliases: [],
-    description: 'Mute a User.',
-    usage: 'mute <username>',
+    description: 'Mute a user for a specified reason.',
+    usage: 'mute {username} [reason]',
     premium: 'false',
     metrics: 'true',
     category: 'moderation',

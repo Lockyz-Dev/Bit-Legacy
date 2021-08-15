@@ -8,9 +8,13 @@ exports.run = async (client, message, args) => {
     let perms = message.guild.me.permissions;
     if (!perms.has('EMBED_LINKS')) return noBotPerms(message, 'EMBED_LINKS');
 
-    if(!args) {
+    if(args[1] === NaN) {
         message.channel.send('You need to specify a number')
         return;
+    }
+
+    if(!args) {
+        let args = 6
     }
 
     message.delete(1000);
@@ -28,7 +32,7 @@ exports.help = {
     name: 'roll',
     aliases: ['diceroll'],
     description: 'Roll a Dice.',
-    usage: 'roll {number}',
+    usage: 'roll [number]',
     premium: 'false',
     metrics: 'true',
     category: 'fun',

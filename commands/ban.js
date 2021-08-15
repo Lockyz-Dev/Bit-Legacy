@@ -54,8 +54,8 @@ exports.run = async (client, message, args) => {
 exports.help = {
     name: 'ban',
     aliases: [],
-    description: 'Ban User for Reason',
-    usage: 'ban {User} {Reason}',
+    description: 'Ban a user for a specified reason.',
+    usage: 'ban {User} [Reason]',
     premium: 'false',
     metrics: 'true',
     category: 'moderation',

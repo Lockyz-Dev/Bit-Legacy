@@ -32,7 +32,7 @@ exports.run = async (client, message, args) => {
 exports.help = {
     name: '8ball',
     aliases: [],
-    description: 'Answer a yes or no question',
+    description: 'Get the answer to a yes or no question from the all wise magic 8ball.',
     usage: '8ball {question}',
     premium: 'false',
     metrics: 'true',

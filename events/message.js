@@ -4,6 +4,7 @@ const { embedColor, prefix } = require('../info');
 const SQLite = require("better-sqlite3");
 const humanizeDuration = require('humanize-duration');
 const sql = new SQLite('./bot.sqlite');
+const sql1 = new SQLite('../premium.sqlite');
 
 module.exports = async (client, message) => {
 	const guild = message.guild;
@@ -151,6 +152,21 @@ module.exports = async (client, message) => {
 		}}
 	}
 
+	let cmdHelp = cmd.help;
+
+	const table4 = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'commandInfo';").get();
+	client.getcmdInfo = sql.prepare("SELECT * FROM commandInfo WHERE commandName = ?");
+	client.setcmdInfo = sql.prepare("INSERT OR REPLACE INTO commandInfo (commandName, enabled) VALUES (@commandName, @enabled);");
+	
+	let cmdInfo;
+	
+	cmdInfo = client.getcmdInfo.get(cmdHelp.name);
+
+	if(!cmdInfo) {
+		cmdInfo = { commandInfo: cmdHelp.name, enabled: "true" };
+		client.setcmdInfo.run(cmdInfo);
+	}
+
 	if (message.content.indexOf(newPrefix) !== 0) return;
 	if (!cmd) return;
 	if(cmd) {
@@ -178,7 +194,11 @@ module.exports = async (client, message) => {
 									if(!metrics) {
 										metrics = { command: cmd.help.name, usecount: 1, servers: 1 };
 										client.setMetrics.run(metrics);
-										cmd.run(client, message, args);
+										if(cmdInfo.enabled === 'false') {
+											message.channel.send('Command is currently disabled, please wait.')
+										} else {
+											cmd.run(client, message, args);
+										}
 										return;
 									}
 				
@@ -192,10 +212,18 @@ module.exports = async (client, message) => {
 								if(cmd.help.datause === "true") {
 									message.channel.send('This Command requires data collection to be enabled.\nYou can enable data collection by using '+'`'+prefix+'settings user dataCollect true`')
 								} else {
-									cmd.run(client, message, args);
+									if(cmdInfo.enabled === 'false') {
+										message.channel.send('Command is currently disabled, please wait.')
+									} else {
+										cmd.run(client, message, args);
+									}
 								}
 							} else {
-								cmd.run(client, message, args);
+								if(cmdInfo.enabled === 'false') {
+									message.channel.send('Command is currently disabled, please wait.')
+								} else {
+									cmd.run(client, message, args);
+								}
 							}
 						}
 						catch(error) {
@@ -208,10 +236,18 @@ module.exports = async (client, message) => {
 								if(cmd.help.datause === "true") {
 									message.channel.send('This Command requires data collection to be enabled.\nYou can enable data collection by using '+'`'+prefix+'settings user dataCollect true`')
 								} else {
-									cmd.run(client, message, args);
+									if(cmdInfo.enabled === 'false') {
+										message.channel.send('Command is currently disabled, please wait.')
+									} else {
+										cmd.run(client, message, args);
+									}
 								}
 							} else {
-								cmd.run(client, message, args);
+								if(cmdInfo.enabled === 'false') {
+									message.channel.send('Command is currently disabled, please wait.')
+								} else {
+									cmd.run(client, message, args);
+								}
 							}
 						}
 						catch(error) {

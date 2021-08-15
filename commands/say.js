@@ -36,7 +36,7 @@ exports.run = async (client, message, args) => {
 exports.help = {
     name: 'say',
     aliases: [],
-    description: 'Make the bot speak',
+    description: 'Make the bot speak.',
     usage: 'say {message}',
     premium: 'false',
     metrics: 'true',

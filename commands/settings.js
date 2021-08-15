@@ -1,8 +1,10 @@
+
 const { embedColor } = require('../info.js');
 const { MessageEmbed } = require('discord.js');
 const Discord = require('discord.js');
 const SQLite = require("better-sqlite3");
 const sql = new SQLite('./bot.sqlite');
+const sql1 = new SQLite('../premium.sqlite');
 
 exports.run = async (client, message, args) => {
 
@@ -110,7 +112,6 @@ exports.run = async (client, message, args) => {
                                 .setTitle('User Settings')
                                 .setDescription(prefix+'settings user {Setting} {Option}')
                                 .setColor(embedColor)
-                                //userEmbed.addField('User Settings', 'Not Finished')
                                 userEmbed.addField('metrics', userSet.metrics, true)
                                 userEmbed.addField('news', 'Not Finished', true)
                                 userEmbed.addField('levels', userSet.levels, true)
@@ -272,7 +273,6 @@ exports.run = async (client, message, args) => {
                                 .setTitle('General Settings')
                                 .setDescription(genSet.prefix+'settings general {setting} <Additional Options>')
                                 .setColor(embedColor)
-                            //generalEmbed.addField('General Settings', genSet.prefix+'settings general {setting} <Additional Options>')
                             generalEmbed.addField('prefix', genSet.prefix, true)
                             generalEmbed.addField('gwayEmote', 'Not Finished', true)
                             generalEmbed.addField('metrics', genSet.metrics, true)
@@ -340,7 +340,6 @@ exports.run = async (client, message, args) => {
                                 .setTitle('Role Settings')
                                 .setDescription(genSet.prefix+'settings role {option} {Role ID or false}')
                                 .setColor(embedColor)
-                            //roleEmbed.addField('Role Settings', genSet.prefix+'settings role {option} {Role ID or false}')
                             if(roleSet.adminID === "false") {
                                 roleEmbed.addField('admin', 'Unset', true)
                             } else {
@@ -361,43 +360,79 @@ exports.run = async (client, message, args) => {
                 return;
                 case 'bot':
                     if(message.author.id === "835394949612175380") {
-                        const botEmbed = new MessageEmbed()
-                            botEmbed.setTitle('Bot Settings')
-                            botEmbed.setDescription('Not Finished')
-                            botEmbed.setColor(embedColor)
-                            //botEmbed.addField('Bot Settings', 'Not Finished')
-                            botEmbed.addField('news-enabled', botSet.isNews, true)
-                            if(botSet.isNews === 'true') {
-                                botEmbed.addField('news-text', botSet.newsText, true)
-                                botEmbed.addField('news-title', botSet.newsTitle, true)
-                            }
-                            botEmbed.addField('presence-text', botSet.presenceName, true)
-                            botEmbed.addField('presence-type', botSet.presenceType, true)
-                            botEmbed.addField('presence-reset', 'Reset the Discord RPC', true)
-                            botEmbed.addField('default-prefix', botSet.prefix, true)
-                            botEmbed.addField('embed-colour', 'Not Finished', true)
-                            botEmbed.addField('your-id', botSet.ownerID, true)
-                            botEmbed.addField('main-guild', botSet.mainGuild, true)
-                        message.channel.send(botEmbed);
+                        switch (args[1]) {
+                            case 'news-enabled':
+                                message.channel.send('Currently Unavailable')
+                            return;
+                            case 'news-text':
+                                if(botSet.isNews === 'true') {
+                                    message.channel.send('Currently Unavailable')
+                                } else {
+                                    message.channel.send('You need to enable news in order to showcase news')
+                                }
+                            return;
+                            case 'news-title':
+                                if(botSet.isNews === 'true') {
+                                    message.channel.send('Currently Unavailable')
+                                } else {
+                                    message.channel.send('You need to enable news in order to showcase news')
+                                }
+                            case 'your-id':
+                                message.channel.send('Currently Unavailable')
+                            return;
+                            case 'prefix':
+                                try{
+                                    if(args[2]) {
+                                        botSet.prefix = args[2]
+                                        client.setbotSet.run(botSet);
+                                        message.channel.send('Default prefix has been changed.')
+                                    } else {
+                                        message.channel.send('You NEED to enter a new prefix')
+                                    }
+                                } catch(err) {
+                                    message.channel.send(err.message)
+                                }
+                            return;
+                            case 'presence-text':
+                                message.channel.send('Currently Unavailable')
+                            return;
+                            case 'presence-type':
+                                message.channel.send('Currently Unavailable')
+                            return;
+                            case 'presence-reset':
+                                message.channel.send('Currently Unavailable')
+                            return;
+                            case 'embed-colour':
+                                message.channel.send('Currently Unavailable')
+                            return;
+                            case 'main-guild':
+                                message.channel.send('Currently Unavailable')
+                            return;
+                            default:
+                                const botEmbed = new MessageEmbed()
+                                    botEmbed.setTitle('Bot Settings')
+                                    botEmbed.setDescription('Not Finished')
+                                    botEmbed.setColor(embedColor)
+                                    botEmbed.addField('news-enabled', botSet.isNews, true)
+                                    if(botSet.isNews === 'true') {
+                                        botEmbed.addField('news-text', botSet.newsText, true)
+                                        botEmbed.addField('news-title', botSet.newsTitle, true)
+                                    }
+                                    botEmbed.addField('presence-text', botSet.presenceName, true)
+                                    botEmbed.addField('presence-type', botSet.presenceType, true)
+                                    botEmbed.addField('presence-reset', 'Reset the Discord RPC', true)
+                                    botEmbed.addField('default-prefix', botSet.prefix, true)
+                                    botEmbed.addField('embed-colour', 'Not Finished', true)
+                                    botEmbed.addField('your-id', botSet.ownerID, true)
+                                    botEmbed.addField('main-guild', botSet.mainGuild, true)
+                                message.channel.send(botEmbed);
+                            return;
+                        }
                     } else {
                         message.channel.send('You don\'t have permission to use this category.')
                     }
-                default:
-                    const mainEmbed = new MessageEmbed()
-                        .setTitle('Setting Categories')
-                        .setDescription(prefix+'settings {category}')
-                        .addField('General Settings', prefix+'settings role', true)
-                        .addField('Channel Settings', prefix+'settings channel', true)
-                        .addField('Role Settings', prefix+'settings role', true)
-                        .addField('Message Settings', 'Not Finished', true)
-                        .addField('Logging Settings', 'Not Finished', true)
-                        .addField('User Settings', prefix+'settings user', true)
-                        if(message.author.id === "835394949612175380") {
-                            mainEmbed.addField('Bot Settings', prefix+'settings bot', user)
-                        }
-                    message.channel.send(mainEmbed)
-                /*
-                    //Log Settings
+                return;
+                case 'logs':
                     const logsEmbed = new MessageEmbed()
                     if(chanSet.logsID === 'false') {
                     } else {
@@ -418,20 +453,38 @@ exports.run = async (client, message, args) => {
                         logsEmbed.addField('role-delete', 'Not Finished', true)
                         logsEmbed.addField('role-update', 'Not Finished', true)
                     }
-
-                    //Message Settings
+                return;
+                case 'message':
                     const infoEmbed = new MessageEmbed()
                         .setTitle('Message Settings')
                         .setDescription('Not Finished')
                         .setColor(embedColor)
-                    //infoEmbed.addField('Message Settings', 'Not Finished')
                     infoEmbed.addField('welcome', 'Not Finished', true)
                     infoEmbed.addField('leave', 'Not Finished', true)
                     if(chanSet.logsID === 'false') {
                     } else {
                         message.channel.send(logsEmbed);
                     }
-                    message.channel.send(infoEmbed);*/
+                    message.channel.send(infoEmbed);
+                return;
+                default:
+                    const mainEmbed = new MessageEmbed()
+                        .setTitle('Settings Categories')
+                        .setDescription(prefix+'settings {category}')
+                        .addField('General Settings', prefix+'settings general', true)
+                        .addField('Channel Settings', prefix+'settings channel', true)
+                        .addField('Role Settings', prefix+'settings role', true)
+                        .addField('Message Settings', 'Not Finished', true)
+                        if(chanSet.logsID === 'false') {
+                        }
+                        else {
+                            mainEmbed.addField('Log Settings', 'Not Finished', true)
+                        }
+                        mainEmbed.addField('User Settings', prefix+'settings user', true)
+                        if(message.author.id === "835394949612175380") {
+                            mainEmbed.addField('Bot Settings', prefix+'settings bot', true)
+                        }
+                    message.channel.send(mainEmbed)
                 return;
             }
 };
@@ -439,8 +492,8 @@ exports.run = async (client, message, args) => {
 exports.help = {
     name: 'settings',
     aliases: [],
-    description: 'Change guild based settings',
-    usage: 'settings {Setting Type} {Setting}',
+    description: 'Change all bot settings',
+    usage: 'settings {category} [setting]',
     premium: 'false',
     metrics: 'false',
     category: 'settings',

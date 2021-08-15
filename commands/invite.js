@@ -23,7 +23,7 @@ exports.run = async (client, message, args) => {
 exports.help = {
     name: 'invite',
     aliases: [],
-    description: 'Create invite.',
+    description: 'Create an invite with specified options.',
     usage: 'invite {use number} {Time}',
     premium: 'false',
     metrics: 'true',

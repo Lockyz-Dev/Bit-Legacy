@@ -49,8 +49,8 @@ exports.run = async (client, message, args) => {
 exports.help = {
     name: 'gend',
     aliases: [],
-    description: 'End a Giveaway.',
-    usage: 'gend {Stuffs}',
+    description: 'End an already running Giveaway.',
+    usage: 'gend {message ID}',
     premium: 'false',
     metrics: 'true',
     category: 'giveaway',

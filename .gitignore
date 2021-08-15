@@ -68,3 +68,4 @@ commands/beta.js
 bot.sqlite
 procfile
 config.js
+config.js

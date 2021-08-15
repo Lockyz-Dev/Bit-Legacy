@@ -47,8 +47,8 @@ exports.run = async (client, message, args) => {
 exports.help = {
     name: 'greroll',
     aliases: [],
-    description: 'Reroll a giveaway.',
-    usage: 'greroll {Stuffs}',
+    description: 'Reroll an already running giveaway.',
+    usage: 'greroll {message ID}',
     premium: 'false',
     metrics: 'true',
     category: 'giveaway',

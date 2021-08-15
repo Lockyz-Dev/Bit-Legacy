@@ -15,6 +15,8 @@ const client = new Client({
 	messageCacheMaxSize: 500,
 	messageCacheLifetime: 120,
 	messageSweepInterval: 60,
+	messageEditHistoryMaxSize: 1000,
+	//allowedMentions: ['roles', 'users'],
 	partials: ['MESSAGE', 'CHANNEL', 'REACTION']
 });
 
@@ -49,27 +51,35 @@ const init = async () => {
 	cmdFiles.forEach(f => {
 		if (!f.endsWith('.js')) return;
 		const response = client.loadCommand(f);
-		if (response) client.logger.log(response);
+		if (response) {
+			client.logger.log(response);
+			//client.channels.cache.get('875677287058636800').send(response);
+		}
 	});
 	console.log(`Loading a total of ${cmdFiles.length} commands.`);
+	//client.channels.cache.get('875677287058636800').send(`Loading a total of ${cmdFiles.length} commands.`);
 
 	const evtFiles = await readdir('./events/');
 	evtFiles.forEach(f => {
 		const evtName = f.split('.')[0];
 		console.log(`Loading Event: ${evtName} 👌`);
+		//client.channels.cache.get('875677287058636800').send(`Loading Event: ${evtName} 👌`);
 		const event = require(`./events/${f}`);
 		client.on(evtName, event.bind(null, client));
 	});
 	console.log(`Loading a total of ${evtFiles.length} events.`);
+	//client.channels.cache.get('875677287058636800').send(`Loading a total of ${evtFiles.length} events.`);
 	
 	const logFiles = await readdir('./logging/');
 	logFiles.forEach(f => {
 		const logName = f.split('.')[0];
 		console.log(`Loading Log: ${logName}`);
+		//client.channels.cache.get('875677287058636800').send(`Loading Log: ${logName}`);
 		const log = require(`./logging/${f}`);
 		client.on(logName, log.bind(null, client));
 	});
 	console.log(`Loading a total of ${logFiles.length} Logging Functions.`);
+	//client.channels.cache.get('875677287058636800').send(`Loading a total of ${logFiles.length} Logging Functions.`);
 
 	client.login(`${config.token}`);
 };

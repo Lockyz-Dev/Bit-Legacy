@@ -8,7 +8,7 @@ exports.run = async (client, message, args) => {
 exports.help = {
     name: 'ping',
     aliases: [],
-    description: 'View the latency of the bot and API.',
+    description: 'View the latency of the bot and the Discord API.',
     usage: 'ping',
     premium: 'false',
     metrics: 'true',

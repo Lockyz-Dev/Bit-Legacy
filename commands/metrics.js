@@ -53,7 +53,7 @@ exports.run = async (client, message, args) => {
 exports.help = {
     name: 'metrics',
     aliases: [],
-    description: 'Get metrics from various commands',
+    description: 'Get metrics from all of our commands.',
     usage: 'metrics {Command}',
     premium: 'false',
     metrics: 'true',

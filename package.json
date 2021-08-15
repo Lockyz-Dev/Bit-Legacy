@@ -40,7 +40,8 @@
     "node-fetch": "^2.6.1",
     "node-gyp": "^8.1.0",
     "pokedex-promise-v2": "^3.3.2",
-    "ws": "^7.5.3"
+    "ws": "^7.5.3",
+    "wumpus-slash": "^1.0.2"
   },
   "devDependencies": {
     "babel-eslint": "^10.0.1",

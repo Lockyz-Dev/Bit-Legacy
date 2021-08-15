@@ -26,7 +26,7 @@ exports.run = async (client, message, args) => {
 exports.help = {
     name: 'flip',
     aliases: ['coinflip'],
-    description: 'Flip a single Coin.',
+    description: 'Flip a single coin.',
     usage: 'flip',
     premium: 'false',
     metrics: 'true',

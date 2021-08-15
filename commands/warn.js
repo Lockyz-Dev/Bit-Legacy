@@ -41,8 +41,8 @@ exports.run = async (client, message, args) => {
 exports.help = {
     name: 'warn',
     aliases: [],
-    description: 'Warn User for Reason',
-    usage: 'warn {User} {Reason}',
+    description: 'Warn a user for a specified reason.',
+    usage: 'warn {user} [reason]',
     premium: 'false',
     metrics: 'true',
     category: 'moderation',

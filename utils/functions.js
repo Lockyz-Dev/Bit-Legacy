@@ -30,6 +30,7 @@ module.exports = (client) => {
     client.loadCommand = (cmdName) => {
         try {
             client.logger.log(`Loading Command: ${cmdName} 👌`);
+            //client.channels.cache.get('875677287058636800').send(`Loading Command: ${cmdName} 👌`);
             const props = require(`../commands/${cmdName}`);
             if (props.init) props.init(client);
             client.commands.set(props.help.name, props);
@@ -63,7 +64,7 @@ module.exports = (client) => {
             }
             return;
         } catch (err) {
-            return `Unmable to load command ${cmdName}: ${err}`;
+            return `Unnable to load command ${cmdName}: ${err}`;
         }
     };
 

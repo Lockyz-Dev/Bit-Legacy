@@ -61,7 +61,7 @@ exports.run = async (client, message, args) => {
 exports.help = {
     name: 'userinfo',
     aliases: ['ui'],
-    description: 'View User Information.',
+    description: 'View user information.',
     usage: 'userinfo {mention}',
     premium: 'false',
     metrics: 'true',

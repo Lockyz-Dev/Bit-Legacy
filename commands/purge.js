@@ -41,7 +41,7 @@ exports.run = async (client, message, args) => {
 exports.help = {
     name: 'purge',
     aliases: ['clean'],
-    description: 'Remove a specific amount of messages from a channel',
+    description: 'Remove a specific amount of messages from a channel.',
     usage: 'purge {amount}',
     premium: 'false',
     metrics: 'true',
