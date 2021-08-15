@@ -11,12 +11,12 @@ exports.run = async (client, message, args) => {
         message.channel.createInvite({ maxAge: 0, maxUses: 0, unique: true })
         .then(invite => {
             message.delete()
-            message.channel.send("I\'ve sent the invite to you in a DM.")
-            message.author.send("You\'re new invite is https://discord.gg/"+invite.code)
+            message.channel.send("I\'ve sent the invite to you in a DM.");
+            message.author.send("You\'re new invite is https://discord.gg/"+invite.code);
         })
         .catch(console.error)
     } else {
-        message.channel.send("You don\'t have permission to use this command.")
+        message.channel.send("You don\'t have permission to use this command.");
     }
 };
 

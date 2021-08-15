@@ -42,7 +42,7 @@ exports.run = async (client, message, args) => {
             .setColor(embedColor);
         if (cmdHelp.aliases.length) cmdHelpEmbed.addField("Aliases", `\`${cmdHelp.aliases.join(", ")}\``, true);
         message.author.send(cmdHelpEmbed);
-        message.channel.send("Sent to you in a DM")
+        message.channel.send("Sent to you in a DM");
         return;
     }
 

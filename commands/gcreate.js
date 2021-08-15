@@ -18,22 +18,22 @@ exports.run = async (client, message, args) => {
         
     let giveawayChannel = message.mentions.channels.first();
     if(!giveawayChannel){
-        return message.channel.send(":x: You have to mention a valid channel!")
+        return message.channel.send(":x: You have to mention a valid channel!");
     }
 
     let giveawayDuration = args[1];
     if(!giveawayDuration || isNaN(ms(giveawayDuration))){
-        return message.channel.send(":x: You have to specify a valid duration!")
+        return message.channel.send(":x: You have to specify a valid duration!");
     }
 
     let giveawayNumberWinners = args[2];
     if(isNaN(giveawayNumberWinners)){
-        return message.channel.send(":x: You have to specify a valid number of winners!")
+        return message.channel.send(":x: You have to specify a valid number of winners!");
     }
 
     let giveawayPrize = args.slice(3).join(" ");
     if(!giveawayPrize){
-        return message.channel.send(":x: You have to specify a valid prize!")
+        return message.channel.send(":x: You have to specify a valid prize!");
     }
 
     client.giveawaysManager.start(giveawayChannel, {
@@ -60,7 +60,7 @@ exports.run = async (client, message, args) => {
         }
     });   
     } else {
-        message.channel.send(`you don"t have the permission to use this command`)
+        message.channel.send(`you don"t have the permission to use this command`);
         return;
     }
 };

@@ -8,17 +8,17 @@ exports.run = async (client, message, args) => {
     let cmdObj = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
 
     if (!cmd) {
-        return message.channel.send("you need to enter a command name.")
+        return message.channel.send("you need to enter a command name.");
     }
 
     if(!cmdObj) {
         let cmdName = client.commands.get("help", "help.name");
-        message.channel.send(`that isn"t a valid command, do `+cmdName+" for a command list")
+        message.channel.send(`that isn"t a valid command, do `+cmdName+" for a command list");
         return;
     }
 
     if(cmdObj.help.metrics === "false") {
-        return message.channel.send(`this command doesn"t have metrics enabled.`)
+        return message.channel.send(`this command doesn"t have metrics enabled.`);
     }
 
     const table = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'commandmetrics';").get();

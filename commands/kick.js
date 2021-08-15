@@ -48,7 +48,7 @@ exports.run = async (client, message, args) => {
     client.channels.cache.get(`697496140563742731`).send(statsEmbed);
   }
   else {
-    message.channel.send("You don\"t have permission to use this command")
+    message.channel.send("You don\'t have permission to use this command");
   }
 };
 

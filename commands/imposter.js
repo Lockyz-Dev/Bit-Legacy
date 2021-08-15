@@ -23,12 +23,12 @@ exports.run = async (client, message, args) => {
 	}
 
     if(userSet.dataCollect === "false") {
-        message.channel.send("Command could not be executed due to data collection being disabled.")
+        message.channel.send("Command could not be executed due to data collection being disabled.");
         return;
     }
     
     var randomAnswer = user + " was " + (Math.random() * 100 <= 1 ? "" : "not ") + "an Imposter."
-    message.channel.send(".      　。　　　　•　    　ﾟ　　。\n　　.　　　.　　　  　　.　　　　　。　　   。　.\n　.　　      。　        ඞ   。　    .    •\n•      "+randomAnswer+"　 　　。　　 　　　　ﾟ　　　.　      　　　.\n,　　　　.　 .")
+    message.channel.send(".      　。　　　　•　    　ﾟ　　。\n　　.　　　.　　　  　　.　　　　　。　　   。　.\n　.　　      。　        ඞ   。　    .    •\n•      "+randomAnswer+"　 　　。　　 　　　　ﾟ　　　.　      　　　.\n,　　　　.　 .");
 };
 
 exports.help = {

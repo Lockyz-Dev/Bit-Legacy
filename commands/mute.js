@@ -29,7 +29,7 @@ exports.run = async (client, message, args) => {
 
     if(!reason) reason = "No reason provided";
 
-    let muted = message.guild.roles.cache.get(631189673905225728)
+    let muted = message.guild.roles.cache.get("631189673905225728");
         member.roles.add(muted).catch(error => message.channel.send("Sorry, I couldn\'t mute because of: "+error)
         .then(msg => {
             msg.delete(20000)
@@ -47,7 +47,7 @@ exports.run = async (client, message, args) => {
         .addField("Reason:", reason, true)
         .setFooter("ID: "+member.id)
         .setTimestamp();
-    client.channels.cache.get(718004574090428470).send(statsEmbed);
+    client.channels.cache.get("718004574090428470").send(statsEmbed);
 };
 
 exports.help = {
