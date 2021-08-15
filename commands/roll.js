@@ -8,13 +8,13 @@ exports.run = async (client, message, args) => {
     let perms = message.guild.me.permissions;
     if (!perms.has('EMBED_LINKS')) return noBotPerms(message, 'EMBED_LINKS');
 
-    if(args[1] === NaN) {
+    if(args[1] === isNaN) {
         message.channel.send('You need to specify a number')
         return;
     }
 
     if(!args) {
-        let args = 6
+        let args = 6;
     }
 
     message.delete(1000);

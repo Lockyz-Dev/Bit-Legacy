@@ -1,12 +1,12 @@
-const { MessageEmbed } = require('discord.js');
-const { embedColor } = require('../info.js');
-const { noBotPerms } = require('../utils/errors');
-const Discord = require('discord.js');
+const { MessageEmbed } = require("discord.js");
+const { embedColor } = require("../info.js");
+const { noBotPerms } = require("../utils/errors");
+const Discord = require("discord.js");
 
 exports.run = async (client, message, args) => {
 
     let perms = message.guild.me.permissions;
-    if (!perms.has('EMBED_LINKS')) return noBotPerms(message, 'EMBED_LINKS');
+    if (!perms.has("EMBED_LINKS")) return noBotPerms(message, "EMBED_LINKS");
 
     message.delete(1000);
     var roll = [
@@ -24,12 +24,12 @@ exports.run = async (client, message, args) => {
 };
 
 exports.help = {
-    name: 'flip',
-    aliases: ['coinflip'],
-    description: 'Flip a single coin.',
-    usage: 'flip',
-    premium: 'false',
-    metrics: 'true',
-    category: 'fun',
-    datause: 'false'
+    name: "flip",
+    aliases: ["coinflip"],
+    description: "Flip a single coin.",
+    usage: "flip",
+    premium: "false",
+    metrics: "true",
+    category: "fun",
+    datause: "false"
 };

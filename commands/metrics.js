@@ -1,28 +1,28 @@
-const { MessageEmbed } = require('discord.js');
-const { embedColor } = require('../info.js');
+const { MessageEmbed } = require("discord.js");
+const { embedColor } = require("../info.js");
 const SQLite = require("better-sqlite3");
-const sql = new SQLite('../premium.sqlite');
+const sql = new SQLite("../premium.sqlite");
 
 exports.run = async (client, message, args) => {
     let cmd = args[0];
     let cmdObj = client.commands.get(cmd) || client.commands.get(client.aliases.get(cmd));
 
     if (!cmd) {
-        return message.channel.send('you need to enter a command name.')
+        return message.channel.send("you need to enter a command name.")
     }
 
     if(!cmdObj) {
-        let cmdName = client.commands.get('help', 'help.name');
-        message.channel.send(`that isn't a valid command, do `+cmdName+' for a command list')
+        let cmdName = client.commands.get("help", "help.name");
+        message.channel.send(`that isn"t a valid command, do `+cmdName+" for a command list")
         return;
     }
 
-    if(cmdObj.help.metrics === 'false') {
-        return message.channel.send(`this command doesn't have metrics enabled.`)
+    if(cmdObj.help.metrics === "false") {
+        return message.channel.send(`this command doesn"t have metrics enabled.`)
     }
 
     const table = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'commandmetrics';").get();
-    if (!table['count(*)']) {
+    if (!table["count(*)"]) {
         sql.prepare("CREATE TABLE commandmetrics (command TEXT PRIMARY KEY, usecount INTEGER, servers INTEGER);").run();
         sql.prepare("CREATE UNIQUE INDEX idx_scores_id ON commandmetrics (command);").run();
         sql.pragma("synchronous = 1");
@@ -51,12 +51,12 @@ exports.run = async (client, message, args) => {
 };
 
 exports.help = {
-    name: 'metrics',
+    name: "metrics",
     aliases: [],
-    description: 'Get metrics from all of our commands.',
-    usage: 'metrics {Command}',
-    premium: 'false',
-    metrics: 'true',
-    category: 'info',
-    datause: 'false'
+    description: "Get metrics from all of our commands.",
+    usage: "metrics {Command}",
+    premium: "false",
+    metrics: "true",
+    category: "info",
+    datause: "false"
 };

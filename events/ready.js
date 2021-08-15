@@ -14,5 +14,5 @@ module.exports = async client => {
     client.channels.cache.get('875677287058636800').send(`Version ${version} of the bot loaded.`);
     await client.logger.log(`${versions[process.env.NODE_ENV]} version of the bot loaded.`);
     client.channels.cache.get('875677287058636800').send(`${versions[process.env.NODE_ENV]} version of the bot loaded.`);
-    client.user.setStatus('online')
+    client.user.setStatus('online');
 };

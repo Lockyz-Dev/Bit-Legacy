@@ -1,12 +1,12 @@
-const { MessageEmbed } = require('discord.js');
-const { embedColor } = require('../info.js');
-const { noBotPerms } = require('../utils/errors');
-const Discord = require('discord.js');
+const { MessageEmbed } = require("discord.js");
+const { embedColor } = require("../info.js");
+const { noBotPerms } = require("../utils/errors");
+const Discord = require("discord.js");
 
 exports.run = async (client, message, args) => {
 
     let perms = message.guild.me.permissions;
-    if (!perms.has('EMBED_LINKS')) return noBotPerms(message, 'EMBED_LINKS');
+    if (!perms.has("EMBED_LINKS")) return noBotPerms(message, "EMBED_LINKS");
 
     message.delete(1000);
     var roll = [
@@ -30,12 +30,12 @@ exports.run = async (client, message, args) => {
 };
 
 exports.help = {
-    name: '8ball',
+    name: "8ball",
     aliases: [],
-    description: 'Get the answer to a yes or no question from the all wise magic 8ball.',
-    usage: '8ball {question}',
-    premium: 'false',
-    metrics: 'true',
-    category: 'fun',
-    datause: 'false'
+    description: "Get the answer to a yes or no question from the all wise magic 8ball.",
+    usage: "8ball {question}",
+    premium: "false",
+    metrics: "true",
+    category: "fun",
+    datause: "false"
 };

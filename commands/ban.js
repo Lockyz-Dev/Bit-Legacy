@@ -1,11 +1,11 @@
-const { embedColor } = require('../info.js');
-const { MessageEmbed } = require('discord.js');
-const { noBotPerms } = require('../utils/errors');
+const { embedColor } = require("../info.js");
+const { MessageEmbed } = require("discord.js");
+const { noBotPerms } = require("../utils/errors");
 
 exports.run = async (client, message, args) => {
 
   let perms = message.guild.me.permissions;
-  if (!perms.has('BAN_MEMBERS')) return noBotPerms(message, 'BAN_MEMBERS');
+  if (!perms.has("BAN_MEMBERS")) return noBotPerms(message, "BAN_MEMBERS");
 
   const table2 = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'roleSettings';").get();
 	client.getroleSet = sql.prepare("SELECT * FROM roleSettings WHERE guildID = ?");
@@ -15,7 +15,7 @@ exports.run = async (client, message, args) => {
 	
 	roleSet = client.getroleSet.get(guild.id);
 
-  if(message.member.hasPermission('BAN_MEMBERS') || message.member.hasPermission('ADMINISTRATOR') || message.member.roles.has(roleSet.adminID)) {
+  if(message.member.hasPermission("BAN_MEMBERS") || message.member.hasPermission("ADMINISTRATOR") || message.member.roles.has(roleSet.adminID)) {
 
     let member = message.mentions.members.first();
   
@@ -27,13 +27,13 @@ exports.run = async (client, message, args) => {
   
     return message.channel.send("I cannot ban this user! Do they have a higher role? Do I have ban permissions?")
   
-    let reason = args.slice(1).join(' ');
+    let reason = args.slice(1).join(" ");
   
     if(!reason) reason = "No reason provided";
   
     message.guild.members.ban(member, {reason: `${reason}`})
   
-      .catch(error => message.channel.send(`Sorry ${message.author} I couldn't ban because of : ${error}`)
+      .catch(error => message.channel.send(`Sorry ${message.author} I couldn"t ban because of : ${error}`)
     );
 
       message.channel.send(`${member} has been banned by **${message.author.username}** for \`${reason}\``)
@@ -47,17 +47,17 @@ exports.run = async (client, message, args) => {
       client.channels.cache.get(`697496140563742731`).send(statsEmbed);*/
     }
     else {
-      message.channel.send(`You don't have the permission to use this command`)
+      message.channel.send(`You don"t have the permission to use this command`)
     }
 };
 
 exports.help = {
-    name: 'ban',
+    name: "ban",
     aliases: [],
-    description: 'Ban a user for a specified reason.',
-    usage: 'ban {User} [Reason]',
-    premium: 'false',
-    metrics: 'true',
-    category: 'moderation',
-    datause: 'false'
+    description: "Ban a user for a specified reason.",
+    usage: "ban {User} [Reason]",
+    premium: "false",
+    metrics: "true",
+    category: "moderation",
+    datause: "false"
 };

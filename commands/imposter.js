@@ -18,26 +18,26 @@ exports.run = async (client, message, args) => {
 	userSet = client.getuserSet.get(user.id);
 
 	if(!userSet) {
-		userSet = { userID: user.id, metrics: "true", levels: 'true', news: 'true', levelNotifs: 'true', dataCollect: 'false' };
+		userSet = { userID: user.id, metrics: "true", levels: "true", news: "true", levelNotifs: "true", dataCollect: "false" };
 		client.setuserSet.run(userSet);
 	}
 
-    if(userSet.dataCollect === 'false') {
-        message.channel.send('Command could not be executed due to data collection being disabled.')
+    if(userSet.dataCollect === "false") {
+        message.channel.send("Command could not be executed due to data collection being disabled.")
         return;
     }
     
-    var randomAnswer = user + ' was ' + (Math.random() * 100 <= 1 ? '' : 'not ') + 'an Imposter.'
+    var randomAnswer = user + " was " + (Math.random() * 100 <= 1 ? "" : "not ") + "an Imposter."
     message.channel.send(".      　。　　　　•　    　ﾟ　　。\n　　.　　　.　　　  　　.　　　　　。　　   。　.\n　.　　      。　        ඞ   。　    .    •\n•      "+randomAnswer+"　 　　。　　 　　　　ﾟ　　　.　      　　　.\n,　　　　.　 .")
 };
 
 exports.help = {
-    name: 'imposter',
-    aliases: ['impostor', 'impasta'],
-    description: 'Find the Impostor.',
-    usage: 'imposter [user]',
-    premium: 'false',
-    metrics: 'true',
-    category: 'fun',
-    datause: 'false'
+    name: "imposter",
+    aliases: ["impostor", "impasta"],
+    description: "Find the Impostor.",
+    usage: "imposter [user]",
+    premium: "false",
+    metrics: "true",
+    category: "fun",
+    datause: "false"
 };

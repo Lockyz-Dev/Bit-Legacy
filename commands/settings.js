@@ -362,13 +362,13 @@ exports.run = async (client, message, args) => {
                     if(message.author.id === "835394949612175380") {
                         switch (args[1]) {
                             case 'news-enabled':
-                                message.channel.send('Currently Unavailable')
+                                message.channel.send('Currently Unavailable');
                             return;
                             case 'news-text':
                                 if(botSet.isNews === 'true') {
                                     message.channel.send('Currently Unavailable')
                                 } else {
-                                    message.channel.send('You need to enable news in order to showcase news')
+                                    message.channel.send('You need to enable news in order to showcase news');
                                 }
                             return;
                             case 'news-title':
@@ -377,20 +377,21 @@ exports.run = async (client, message, args) => {
                                 } else {
                                     message.channel.send('You need to enable news in order to showcase news')
                                 }
+                            return;
                             case 'your-id':
-                                message.channel.send('Currently Unavailable')
+                                message.channel.send('Currently Unavailable');
                             return;
                             case 'prefix':
                                 try{
                                     if(args[2]) {
-                                        botSet.prefix = args[2]
+                                        botSet.prefix = args[2];
                                         client.setbotSet.run(botSet);
-                                        message.channel.send('Default prefix has been changed.')
+                                        message.channel.send('Default prefix has been changed.');
                                     } else {
-                                        message.channel.send('You NEED to enter a new prefix')
+                                        message.channel.send('You NEED to enter a new prefix');
                                     }
                                 } catch(err) {
-                                    message.channel.send(err.message)
+                                    message.channel.send(err.message);
                                 }
                             return;
                             case 'presence-text':
@@ -474,17 +475,17 @@ exports.run = async (client, message, args) => {
                         .addField('General Settings', prefix+'settings general', true)
                         .addField('Channel Settings', prefix+'settings channel', true)
                         .addField('Role Settings', prefix+'settings role', true)
-                        .addField('Message Settings', 'Not Finished', true)
+                        .addField('Message Settings', 'Not Finished', true);
                         if(chanSet.logsID === 'false') {
                         }
                         else {
-                            mainEmbed.addField('Log Settings', 'Not Finished', true)
+                            mainEmbed.addField('Log Settings', 'Not Finished', true);
                         }
-                        mainEmbed.addField('User Settings', prefix+'settings user', true)
+                        mainEmbed.addField('User Settings', prefix+'settings user', true);
                         if(message.author.id === "835394949612175380") {
-                            mainEmbed.addField('Bot Settings', prefix+'settings bot', true)
+                            mainEmbed.addField('Bot Settings', prefix+'settings bot', true);
                         }
-                    message.channel.send(mainEmbed)
+                    message.channel.send(mainEmbed);
                 return;
             }
 };

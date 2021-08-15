@@ -195,7 +195,7 @@ module.exports = async (client, message) => {
 										metrics = { command: cmd.help.name, usecount: 1, servers: 1 };
 										client.setMetrics.run(metrics);
 										if(cmdInfo.enabled === 'false') {
-											message.channel.send('Command is currently disabled, please wait.')
+											message.channel.send('Command is currently disabled, please wait.');
 										} else {
 											cmd.run(client, message, args);
 										}
