@@ -44,20 +44,20 @@ const commandFiles = fs.readdirSync('./commands').filter(file => file.endsWith('
 
 for (const file of commandFiles) {
 	console.log('Loading Slash Command Collection...')
-	const command = require(`./commands/${file}`);
+	const command = require('./commands/'+file);
 	// Set a new item in the Collection
 	// With the key as the command name and the value as the exported module
 	client.commands.set(command.data.name, command);
 }
 console.log('🟢 Found all Slash Commands. LMB Slash Command System Online...')
-console.log('Loading LMB Welcome System V2...')
+console.log('Loading LMB Welcome System V2 Beta...')
 
 const eventFiles = fs.readdirSync('./events').filter(file => file.endsWith('.js'));
 const loggingFiles = fs.readdirSync('./logging').filter(file => file.endsWith('.js'));
 
 for (const file of eventFiles) {
 	
-	const event = require(`./events/${file}`);
+	const event = require('./events/'+file);
 	if (event.once) {
 		client.once(event.name, (...args) => event.execute(...args));
 	} else {
@@ -67,8 +67,8 @@ for (const file of eventFiles) {
 console.log('🟢 LMB Welcome System Online')
 
 for (const file of loggingFiles) {
-	console.log('Loading LMB Logging System V2...')
-	const logging = require(`./logging/${file}`);
+	console.log('Loading LMB Logging System V2 Beta...')
+	const logging = require('./logging'+file);
 	if (logging.once) {
 		client.once(logging.name, (...args) => logging.execute(...args));
 	} else {
