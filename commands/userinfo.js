@@ -1,70 +1,66 @@
-const { MessageEmbed } = require('discord.js');
-const { embedColor } = require('../info.js');
-const { noBotPerms } = require('../utils/errors');
-const Discord = require('discord.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
+const locale = require('../locale/en-US.json')
+const SQLite = require("better-sqlite3");
+const sql = new SQLite('./bot.sqlite');
 
-exports.run = async (client, message, args) => {
+module.exports = {
+	data: new SlashCommandBuilder()
+		.setName('userinfo')
+		.setDescription('Get user information.')
+        .addUserOption((option) =>
+            option
+                .setName('user')
+                .setDescription('The user you want information on (Optional)')
+                .setRequired(false)
+        ),
+	async execute(interaction) {
+        const membera = interaction.user
+        const usra = interaction.options.getUser('user');
+        var user
+        var usAcc
 
-    let perms = message.guild.me.permissions;
-    if (!perms.has('EMBED_LINKS')) return noBotPerms(message, 'EMBED_LINKS');
+        if(!usra) {
+            user = membera
+            usAcc = "true"
+        } else {
+            client.getUsSett = sql.prepare("SELECT * FROM userSettings WHERE userID = ?");
+            let userset = client.getUsSett.get(user.id)
 
-    const taggedUser = message.mentions.users.first();
+            if(userset.userAccess = 0) {
+                interaction.reply({ content: 'This user has disabled access to their account, only showing you basic information.'})
+                usAcc = "false"
+            } else {
+                usAcc = "true"
+            }
+            user = usra
+        }
+        const member = interaction.guild.members.cache.get(user.id);
 
-    var user;
-
-    if(!message.mentions.users.size) {
-        user = message.author.username
-    } else {
-        user = taggedUser.username
-    }
-
-    const table3 = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'userSettings';").get();
-	client.getuserSet = sql.prepare("SELECT * FROM userSettings WHERE userID = ?");
-    client.setuserSet = sql.prepare("INSERT OR REPLACE INTO userSettings (userID, metrics, levels, news, levelNotifs, dataCollect) VALUES (@userID, @metrics, @levels, @news, @levelNotifs, @dataCollect);");
-    
-	let userSet;
-	
-	userSet = client.getuserSet.get(user.id);
-
-	if(!userSet) {
-		userSet = { userID: user.id, metrics: "true", levels: 'true', news: 'true', levelNotifs: 'true', dataCollect: 'false' };
-		client.setuserSet.run(userSet);
+        const embed = new MessageEmbed()
+            .setTitle('User Info')
+            .setThumbnail(user.avatarURL())
+            .addField('Username', user.username, true)
+            if(member.nickname != null) {
+                embed.addField('Nickname', member.nickname, true)
+            } else {
+                embed.addField('Nickname', 'None', true)
+            }
+            if(usAcc === "true") {
+                if(member.presence === null) {
+                    embed.addField('Presence Status', 'User status is messed up somehow...', true)
+                } else {
+                    embed.addField('Presence Status', member.presence.status, true)
+                }
+                embed.addField('Joined', '<t:'+Math.floor(new Date(member.joinedAt).getTime() / 1000)+'>', true)
+            }
+            embed.addField('Roles', member.roles.cache.map(r => r.toString()).join(' | '))
+            if(usAcc === "true") {
+                embed.setFooter('ID: '+user.id+ ' | User Created: ')
+                embed.setTimestamp(user.createdTimestamp)
+            } else {
+                embed.setTimestamp()
+            }
+        interaction.reply({ embeds: [embed] })
 	}
-
-    if(userSet.dataCollect === 'false') {
-        message.channel.send('Command could not be executed due to data collection being disabled.')
-        return;
-    }
-    
-    const statsEmbed = new MessageEmbed()
-      .setTitle('User Info')
-      .setAuthor(client.user.username, client.user.avatarURL())
-      .setColor(embedColor)
-      .setThumbnail(user.avatarURL())
-      .addField(`Username`, user.username, true)
-      if(member.nickname != null) {
-        statsEmbed.addField(`Nickname`, member.nickname, true)
-      } else {
-        statsEmbed.addField(`Nickname`, 'None', true)
-      }
-      //.addField(`Nickname`, member.nickname, true)
-      statsEmbed.addField(`ID`, user.id, true)
-      statsEmbed.addField(`Created`, user.createdAt, true)
-      statsEmbed.addField(`Bot?`, user.bot, true)
-      statsEmbed.addField(`Presence Status`, user.presence.status)
-      statsEmbed.addField(`Joined`, member.joinedAt, true)
-      statsEmbed.addField(`Roles`, member.roles.cache.map(r => `${r}`).join(' | '), true)
-      statsEmbed.setTimestamp();
-    message.channel.send(statsEmbed);
-};
-
-exports.help = {
-    name: 'userinfo',
-    aliases: ['ui'],
-    description: 'View user information.',
-    usage: 'userinfo {mention}',
-    premium: 'false',
-    metrics: 'true',
-    category: 'info',
-    datause: 'true'
 };

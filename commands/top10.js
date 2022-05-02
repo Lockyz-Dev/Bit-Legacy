@@ -1,54 +1,53 @@
-const { MessageEmbed } = require('discord.js');
-const { embedColor } = require('../info.js');
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
+const { embedColor, ownerID } = require('../config');
 const SQLite = require("better-sqlite3");
+const messageCreate = require('../events/messageCreate');
 const sql = new SQLite('./bot.sqlite');
+const locale = require('../locale/en-US.json')
 
-exports.run = async (client, message, args) => {
+module.exports = {
+	data: new SlashCommandBuilder()
+		.setName('top10')
+		.setDescription('Get current top 10 point leaders.'),
+	async execute(interaction) {
+        const client = interaction.client
 
-    const table = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'scores';").get();
-	if (!table['count(*)']) {
-	  sql.prepare("CREATE TABLE scores (id TEXT PRIMARY KEY, user TEXT, guild TEXT, points INTEGER, level INTEGER);").run();
-	  sql.prepare("CREATE UNIQUE INDEX idx_scores_id ON scores (id);").run();
-	  sql.pragma("synchronous = 1");
-	  sql.pragma("journal_mode = wal");
-	}
-	client.getScore = sql.prepare("SELECT * FROM scores WHERE user = ? AND guild = ?");
-    client.setScore = sql.prepare("INSERT OR REPLACE INTO scores (id, user, guild, points, level) VALUES (@id, @user, @guild, @points, @level);");
-    
-    let score;
-	
-	if (message.guild) {
+		client.getGuSett = sql.prepare("SELECT * FROM guildFeatures WHERE guildID = ?");
+        let guildset = client.getGuSett.get(interaction.guild.id)
 
-		score = client.getScore.get(message.author.id, message.guild.id);
-		  
-		if (!score) {
-			score = { id: `${message.guild.id}-${message.author.id}`, user: message.author.id, guild: message.guild.id, points: 0, level: 0 };
+        if(!guildset) {
+            interaction.reply('The XP System is disabled through guild settings, a server owner should disable this command.')
+            return;
         }
-        // Grab the thing
-	  		const top10 = sql.prepare("SELECT * FROM scores WHERE guild = ? ORDER BY points DESC LIMIT 10;").all(message.guild.id);
-  
-	  		// Now shake it and show it! (as a nice embed, too!)
-	  		const embed = new MessageEmbed()
+        if(guildset.enableXP === "true") {
+            interaction.reply('The XP System is disabled through guild settings, a server owner should disable this command.')
+            return;
+        }
+
+	    client.getScore = sql.prepare("SELECT * FROM scores WHERE user = ? AND guild = ?");
+
+        let score;
+
+        if(interaction.guild) {
+            
+            score = client.getScore.get(interaction.user.id, interaction.guild.id);
+
+            if(!score) {
+                score = { id: `${interaction.guild.id}-${interaction.user.id}`, user: interaction.user.id, guild: interaction.guild.id, points: 0, level: 0 };
+            }
+
+            const top10 = sql.prepare("SELECT * FROM scores WHERE guild = ? ORDER BY points DESC LIMIT 10;").all(interaction.guild.id);
+
+            const embed = new MessageEmbed()
 				.setTitle("Top Ten")
-				.setAuthor(client.user.username, client.user.avatarURL())
 				.setDescription("Our top 10 points leaders!")
-				.setColor(0x00AE86);
+				.setColor(embedColor);
   
 	  		for(const data of top10) {
-				embed.addField(client.users.cache.get(data.user).username, `${data.points} points (level ${data.level})`);
+				embed.addField('\u200b', '<@'+data.user+'> '+data.points +' points (level '+data.level+')');
 	  		}
-	  		return message.channel.send({embed});
-    }
-	message.delete(1000);
-};
-
-exports.help = {
-    name: 'top10',
-    aliases: ['leaderboard', 't10'],
-    description: 'Show the top 10 point getters.',
-    usage: 'top10',
-    premium: 'false',
-    metrics: 'true',
-    category: 'level',
-    datause: 'true'
+	  		return interaction.reply({ embeds: [embed] });
+        }
+	}
 };

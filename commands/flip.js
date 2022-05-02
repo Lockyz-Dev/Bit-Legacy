@@ -1,35 +1,67 @@
-const { MessageEmbed } = require("discord.js");
-const { embedColor } = require("../info.js");
-const { noBotPerms } = require("../utils/errors");
-const Discord = require("discord.js");
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const {MessageEmbed} = require('discord.js')
+const locale = require('../locale/en-US.json')
 
-exports.run = async (client, message, args) => {
+module.exports = {
+	data: new SlashCommandBuilder()
+		.setName('flip')
+		.setDescription('Flip a basic coin.'),
+	async execute(interaction) {
+            var sides = [
+                "heads",
+                "tails",
+                "heads1",
+                "tails1",
+                "heads2",
+                "tails2",
+                "heads3",
+                "tails3",
+                "heads4",
+                "tails4",
+                "heads5",
+                "tails5",
+            ]
 
-    let perms = message.guild.me.permissions;
-    if (!perms.has("EMBED_LINKS")) return noBotPerms(message, "EMBED_LINKS");
+            var answer = 'Nothing';
+            var coinName = "Nothing";
 
-    message.delete(1000);
-    var roll = [
-      "Heads",
-      "Tails"
-  ]
-  var randomAnswer = roll[Math.floor(Math.random() * roll.length)];
-  const statsEmbed = new MessageEmbed()
-        .setAuthor(client.user.username, client.user.avatarURL())
-        .setColor(embedColor)
-        .setTitle("Coin Flip")
-        .setDescription(`You got a ${randomAnswer}`)
-        .setTimestamp();
-    message.channel.send(statsEmbed);
-};
-
-exports.help = {
-    name: "flip",
-    aliases: ["coinflip"],
-    description: "Flip a single coin.",
-    usage: "flip",
-    premium: "false",
-    metrics: "true",
-    category: "fun",
-    datause: "false"
+            var answer1 = sides[Math.floor(Math.random() * sides.length)];
+            if(answer1 === "heads" || answer1 === "heads1" || answer1 === "heads2" || answer1 === "heads3" || answer1 === "heads4" || answer1 === "heads5") {
+                answer = locale.flipHeads
+            } else if(answer1 === "tails" || answer1 === "tails1" || answer1 === "tails2" || answer1 === "tails3" || answer1 === "tails4" || answer1 === "tails5"){
+                 answer = locale.flipTails
+            }
+            if(answer1 === "heads") {
+                coinName = locale.flipHeads0
+            } else if(answer1 === "tails") {
+                coinName = locale.flipTails0
+            } else if(answer1 === "heads1") {
+                coinName = locale.flipHeads1
+            } else if(answer1 === "tails1") {
+                coinName = locale.flipTails1
+            } else if(answer1 === "heads2") {
+                coinName = locale.flipHeads2
+            } else if(answer1 === "tails2") {
+                coinName = locale.flipTails2
+            } else if(answer1 === "heads3") {
+                coinName = locale.flipHeads3
+            } else if(answer1 === "tails3") {
+                coinName = locale.flipTails3
+            } else if(answer1 === "heads4") {
+                coinName = locale.flipHeads4
+            } else if(answer1 === "tails4") {
+                coinName = locale.flipTails4
+            } else if(answer1 === "heads5") {
+                coinName = locale.flipHeads5
+            } else if(answer1 === "tails5") {
+                coinName = locale.flipTails5
+            }
+            const embed = new MessageEmbed()
+                .setTitle(locale.flipEmbedTitle)
+                .setDescription(locale.flipDescription.replace('{answer}', answer))
+                .setImage("https://db.lockyzdev.net/bots/commands/flip/"+answer1+".jpg")
+                .setFooter(coinName)
+                .setTimestamp();
+            interaction.reply({ embeds: [embed] })
+		}
 };

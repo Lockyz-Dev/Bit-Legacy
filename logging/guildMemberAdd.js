@@ -1,75 +1,60 @@
-const Discord = require('discord.js');
 const { MessageEmbed } = require('discord.js');
 const { embedColor, ownerID } = require('../config');
 const SQLite = require("better-sqlite3");
-const message = require('../events/message');
 const sql = new SQLite('./bot.sqlite');
 
-module.exports = async (client, member) => {
-	let guild = member.guild;
-	const table = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'channelSettings';").get();
-	client.getguildSet = sql.prepare("SELECT * FROM channelSettings WHERE guildID = ?");
-    client.setguildSet = sql.prepare("INSERT OR REPLACE INTO channelSettings (guildID, logsID, welcomeID, suggestID) VALUES (@guildID, @logsID, @welcomeID, @suggestID);");
-    
-	let guildSet;
-	
-	guildSet = client.getguildSet.get(guild.id);
+module.exports = {
+	name: 'guildMemberAdd',
+	execute(member) {
+		const client = member.client
+		const user = member.user
 
-	const table2 = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'roleSettings';").get();
-	client.getroleSet = sql.prepare("SELECT * FROM roleSettings WHERE guildID = ?");
-    client.setroleSet = sql.prepare("INSERT OR REPLACE INTO roleSettings (guildID, adminID, modID, muteID, autoID) VALUES (@guildID, @adminID, @modID, @muteID, @autoID);");
-    
-	let roleSet;
-	
-	roleSet = client.getroleSet.get(guild.id);
+		client.getChSett = sql.prepare("SELECT * FROM channelSettings WHERE guildID = ?");
+		client.getGuSett = sql.prepare("SELECT * FROM guildFeatures WHERE guildID = ?");
+		client.getRoSett = sql.prepare("SELECT * FROM roleSettings WHERE guildID = ?");
+		client.setGuSett = sql.prepare("INSERT OR REPLACE INTO guildFeatures (guildID, enableLogging, enableWelcome, enableXP, enableRoleOnJoin) VALUES (@guildID, @enableLogging, @enableWelcome, @enableXP, @enableRoleOnJoin);");
 
-	const table3 = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'userSettings';").get();
-	client.getuserSet = sql.prepare("SELECT * FROM userSettings WHERE userID = ?");
-    client.setuserSet = sql.prepare("INSERT OR REPLACE INTO userSettings (userID, metrics, levels, news, levelNotifs, dataCollect) VALUES (@userID, @metrics, @levels, @news, @levelNotifs, @dataCollect);");
-    
-	let userSet;
-	
-	userSet = client.getuserSet.get(message.author.id);
-
-	if(!userSet) {
-		userSet = { userID: message.author.id, metrics: "true", levels: 'true', news: 'true', levelNotifs: 'true', dataCollect: 'false' };
-		client.setuserSet.run(userSet);
-	}
-
-	if(roleSet.autoID === 'false')
-	{} else {
-		member.roles.add(roleSet.autoID)
-	}
-
-	if(userSet.dataCollect === 'true') {
-		if(guildSet.welcomeID !== 'false') {
-			const embed = new MessageEmbed()
-				.setAuthor(guild.name, guild.iconURL())
-				.setDescription('Welcome <@'+member.user.id+'> to '+guild.name)
-				.setColor(embedColor)
-				.setTimestamp();
-			client.channels.cache.get(guildSet.welcomeID).send(member.user, embed);
+		let chanset = client.getChSett.get(member.guild.id)
+		let guildset = client.getGuSett.get(member.guild.id)
+		let roleset = client.getRoSett.get(member.guild.id)
+		
+		if(!guildset) {
+			guildset = { guildID: member.guild.id, enableLogging: 'false', enableWelcome: 'false', enableXP: 'false', enableRoleOnJoin: 'false' }
+			client.setGuSett.run(guildset);
 		}
-		if(guildSet.logsID === 'false') {
-		} else {
+
+		if(guildset.enableLogging === 'true') {
+			var logsID = chanset.loggingChannel
+
 			const embed = new MessageEmbed()
-				.setAuthor("Member Joined | "+member.user.username, member.user.avatarURL())
+				.setAuthor('Member Joined | '+user.username, user.avatarURL())
 				.setColor(embedColor)
-				.addField('Invited By', "Currently Unavailable", true)
-				.addField('@mention', '<@'+member.id+'>', true)
-				.setFooter('User ID '+ member.id)
+				.addField('User Created', '<t:'+Math.floor(new Date(user.createdAt).getTime() / 1000)+'>', true)
+				.addField('@mention', '<@'+user.id+'>', true)
+				.setFooter('User ID '+ user.id+' | Join Date/Time: ')
 				.setTimestamp();
-			client.channels.cache.get(guildSet.logsID).send(embed);
+			client.channels.cache.get(logsID).send({ embeds: [embed] })
 		}
-	} else {
-		if(guildSet.logsID === 'false') {}
-		else {
-			const embed = new MessageEmbed()
-				.setAuthor("Member Joined | "+ member.id)
+		if(guildset.enableWelcome === 'true') {
+			var welcomeID = chanset.welcomeChannel;
+
+			const embed2 = new MessageEmbed()
+				.setAuthor('Welcome | '+user.username, user.avatarURL())
 				.setColor(embedColor)
-				.setDescription('A member joined however they have data collection disabled.')
+				.setDescription('Welcome to '+member.guild.name+' <@'+user.id+'>')
+				/*.setDescription('Hello <@'+member.id+'> and welcome to Lockyz Dev.\nWe hope you enjoy your stay in our amazing server.\n\nMake sure to read the <#872687574592942110> before doing anything.')
+				.addField('Useful Channels', '\u200B')
+				.addField('Info Category', '<#873411946613973003> for our products\n<#872687574592942110> for rules\n<#595881825688092672> for roles\n<#864321208094425108> for Known Issues with Our Bots')
+				.addField('Announcements', '<#750291755001315360> for General Announcements and New/Updated Products\n<#857615516876275732> for polls\n<#896250169090273290> for Spoilers')
+				.setFooter('JoiBoi Welcome System Private Beta')*/
 				.setTimestamp();
-			client.channels.cache.get(guildSet.logsID).send(embed);
+			client.channels.cache.get(welcomeID).send({ embeds: [embed2] })
+			return;
+		}
+		if(guildset.enableRoleOnJoin === 'true') {
+			var memberRole = roleset.memberRole
+
+			member.roles.add(memberRole)
 		}
 	}
 }

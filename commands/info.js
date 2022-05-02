@@ -1,33 +1,22 @@
-const { MessageEmbed } = require("discord.js");
-const { embedColor, prefix, base, dev, commby, bName, supportS, description } = require("../info.js");
-const { noBotPerms } = require("../utils/errors");
-const Discord = require("discord.js");
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { MessageEmbed, Permissions } = require('discord.js')
+const locale = require('../locale/en-US.json')
 
-exports.run = async (client, message, args) => {
-
-    let perms = message.guild.me.permissions;
-    if (!perms.has("EMBED_LINKS")) return noBotPerms(message, "EMBED_LINKS");
-    message.delete(1000);
-    var d = new Date();
-    var n = d.getFullYear();
-    const infoEmbed = new MessageEmbed()
-        .setTitle(bName)
-        .setDescription(description)
-        .setColor(embedColor)
-        .addField("Support", supportS)
-        .addField("Base Version", base)
-        .addField("Developer", dev)
-        .setFooter("©2020-"+n+" Lockyz Dev");
-    message.channel.send(infoEmbed);
-};
-
-exports.help = {
-    name: "info",
-    aliases: ["botinfo"],
-    description: "View bot information.",
-    usage: "info",
-    premium: "false",
-    metrics: "true",
-    category: "info",
-    datause: "false"
+module.exports = {
+	data: new SlashCommandBuilder()
+		.setName('info')
+		.setDescription('Get advanced information about the bot.'),
+	async execute(interaction) {
+        const client = interaction.client
+        
+        var d = new Date();
+        var n = d.getFullYear();
+        const embed = new MessageEmbed()
+            .setTitle(locale.infoEmbedTitle)
+            .setDescription(locale.infoEmbedDescription)
+            .addField(locale.infoFieldSupport, 'https://discord.gg/eRPsZns')
+            .addField(locale.infoFieldDev, 'Robin Painter')
+            .setFooter("©2018-"+n+" Lockyz Dev");
+        interaction.reply({ embeds: [embed] })
+	}
 };

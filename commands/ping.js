@@ -1,17 +1,12 @@
-exports.run = async (client, message, args) => {
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const locale = require('../locale/en-US.json')
 
-    message.delete(1000);
-    const msg = await message.channel.send("Ping?");
-    msg.edit(`Pong! Latency is \`${msg.createdTimestamp - message.createdTimestamp}ms\`. API Latency is \`${Math.round(client.ws.ping)}ms\`.`);
-};
-
-exports.help = {
-    name: "ping",
-    aliases: [],
-    description: "View the latency of the bot and the Discord API.",
-    usage: "ping",
-    premium: "false",
-    metrics: "true",
-    category: "info",
-    datause: "false"
+module.exports = {
+	data: new SlashCommandBuilder()
+		.setName('ping')
+		.setDescription('Replies with Pong!'),
+	async execute(interaction) {
+        await interaction.reply('Ping?');
+        interaction.editReply(`Pong! Latency is \`${interaction.createdTimestamp - new Date()}ms\`. API Latency is \`${Math.round(interaction.client.ws.ping)}ms\`.`);
+	},
 };

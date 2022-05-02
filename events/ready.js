@@ -1,18 +1,49 @@
-const { prefix } = require('../config');
-const { version } = require('../package.json');
+module.exports = {
+	name: 'ready',
+	once: true,
+	execute(client) {
 
-const versions = {
-    production: 'Production',
-    development: 'Development'
-};
+		client.user.setActivity("with your feelings.", {
+			type: "PLAYING"
+		});
 
-module.exports = async client => {
+		client.channels.cache.get('708601166191394816').send({ content: '🟢 LMB Slash Command System Online'})
+		//client.channels.cache.get('611747163143143443').send({ content: '🟢 LMB Slash Command System Online'})
+		client.channels.cache.get('879557759337652294').send({ content: '🟢 LMB Slash Command System Online'})
 
-    await client.logger.log(`Logged in as ${client.user.tag} (${client.user.id}) in ${client.guilds.size} server(s).`);
-    client.channels.cache.get('875677287058636800').send(`Logged in as ${client.user.tag} (${client.user.id}) in ${client.guilds.size} server(s).`);
-    await client.logger.log(`Version ${version} of the bot loaded.`);
-    client.channels.cache.get('875677287058636800').send(`Version ${version} of the bot loaded.`);
-    await client.logger.log(`${versions[process.env.NODE_ENV]} version of the bot loaded.`);
-    client.channels.cache.get('875677287058636800').send(`${versions[process.env.NODE_ENV]} version of the bot loaded.`);
-    client.user.setStatus('online');
+		client.channels.cache.get('708601166191394816').send({ content: '🟢 LMB Logging System Online'})
+		//client.channels.cache.get('611747163143143443').send({ content: '🟢 LMB Logging System V2 Beta Partially Online'})
+		client.channels.cache.get('879557759337652294').send({ content: '🟢 LMB Logging System Online'})
+		
+		client.channels.cache.get('708601166191394816').send({ content: '🟢 LMB XP System Online'})
+		//client.channels.cache.get('611747163143143443').send({ content: '🔴 LMB Levelling System V2 Beta Offline'})
+		client.channels.cache.get('879557759337652294').send({ content: '🟢 LMB XP System Online'})
+		console.log('🟢 LMB XP System Online')
+
+		//client.channels.cache.get('708601166191394816').send({ content: '🔴 LMB Moderation System V2 Beta Offline'})
+		//client.channels.cache.get('611747163143143443').send({ content: '🔴 LMB Moderation System V2 Beta Offline'})
+		client.channels.cache.get('879557759337652294').send({ content: '🔴 LMB Moderation System Offline'})
+		console.log('🔴 LMB Moderation System Offline')
+
+		client.channels.cache.get('708601166191394816').send({ content: '🟢 LMB Giveaway System Online'})
+		//client.channels.cache.get('611747163143143443').send({ content: '🟢 LMB Giveaway System Online'})
+		client.channels.cache.get('879557759337652294').send({ content: '🟢 LMB Giveaway System Online'})
+		console.log('🟢 LMB Giveaway System Online')
+
+		//client.channels.cache.get('708601166191394816').send({ content: '🔴 LMB Suggestions System V2 Beta Offline'})
+		//client.channels.cache.get('611747163143143443').send({ content: '🔴 LMB Suggestions System V2 Beta Offline'})
+		client.channels.cache.get('879557759337652294').send({ content: '🔴 LMB Suggestions System V2 Beta Offline'})
+		console.log('🔴 LMB Suggestions System V2 Beta Offline')
+
+		client.channels.cache.get('708601166191394816').send({ content: '🟢 LMB Settings System Online'})
+		//client.channels.cache.get('611747163143143443').send({ content: '🔴 LMB Settings System Offline'})
+		client.channels.cache.get('879557759337652294').send({ content: '🟢 LMB Settings System Online'})
+		console.log('🟢 LMB Settings System Online')
+
+		client.channels.cache.get('708601166191394816').send({ content: '🟢 LMB Partially Online!'})
+		client.channels.cache.get('611747163143143443').send({ content: '🟢 LMB Partially Online!'})
+		client.channels.cache.get('879557759337652294').send({ content: '🟢 LMB Partially Online!'})
+		console.log('🟢 LMB Partially Online! Logged in as '+ client.user.tag)
+		console.log('==== Have a good day! ====');
+	},
 };

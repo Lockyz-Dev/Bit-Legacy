@@ -1,59 +1,68 @@
-const { MessageEmbed } = require('discord.js');
-const { embedColor } = require('../info.js');
-const { noBotPerms } = require('../utils/errors');
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
+const { embedColor, ownerID } = require('../config');
 const SQLite = require("better-sqlite3");
+const messageCreate = require('../events/messageCreate');
 const sql = new SQLite('./bot.sqlite');
+const locale = require('../locale/en-US.json')
 
-exports.run = async (client, message, args) => {
+module.exports = {
+	data: new SlashCommandBuilder()
+		.setName('points')
+		.setDescription('Get current points.')
+        .addUserOption((option) =>
+            option
+                .setName('user')
+                .setDescription('The user you want information on (Optional)')
+                .setRequired(false)
+        ),
+	async execute(interaction) {
+        const client = interaction.client
+        const membera = interaction.user
+        const usra = interaction.options.getUser('user');
+        var user
 
-    const table = sql.prepare("SELECT count(*) FROM sqlite_master WHERE type='table' AND name = 'scores';").get();
-	if (!table['count(*)']) {
-	  sql.prepare("CREATE TABLE scores (id TEXT PRIMARY KEY, user TEXT, guild TEXT, points INTEGER, level INTEGER);").run();
-	  sql.prepare("CREATE UNIQUE INDEX idx_scores_id ON scores (id);").run();
-	  sql.pragma("synchronous = 1");
-	  sql.pragma("journal_mode = wal");
-	}
-	client.getScore = sql.prepare("SELECT * FROM scores WHERE user = ? AND guild = ?");
-    client.setScore = sql.prepare("INSERT OR REPLACE INTO scores (id, user, guild, points, level) VALUES (@id, @user, @guild, @points, @level);");
-    
-    let score;
-	
-	if (message.guild) {
-
-		score = client.getScore.get(message.author.id, message.guild.id);
-		  
-		if (!score) {
-			score = { id: `${message.guild.id}-${message.author.id}`, user: message.author.id, guild: message.guild.id, points: 0, level: 0 };
+        if(!usra) {
+            user = membera
+        } else {
+            user = usra
         }
-        var nextLevel = score.level+1;
-        //Basically it's score.level+1 divided by 0.1 too the power of 2 *Written in order of when it's done... BODMAS is not taken into account*
-        var pointsNeed = Math.floor(Math.pow(((score.level+1)/0.1),2));
-        // Create Embed
-			const embed = new MessageEmbed()
-            .setTitle("Points")
-            .setAuthor(client.user.username, client.user.avatarURL())
-            // get score.level and send it as a Points Field
-            .addField("Current Level", score.level, true)
-            // get score.points and send it as a Points Field
-            .addField("Points", score.points, true)
-            //get score.level and add 1
-            .addField("Next Level", score.level+1, true)
-            .addField("Points needed for level "+ nextLevel, `${pointsNeed} points`, true)
-            .setFooter('Requested by: '+message.author.username)
-            .setColor(0x00AE86);
-        //Send the Embed
-        return message.channel.send(embed);
-    }
-    message.delete();
-};
 
-exports.help = {
-    name: 'points',
-    aliases: ['pts', 'score'],
-    description: 'Get your point and level count.',
-    usage: 'points',
-    premium: 'false',
-    metrics: 'true',
-    category: 'level',
-    datause: 'true'
+        client.getGuSett = sql.prepare("SELECT * FROM guildFeatures WHERE guildID = ?");
+        let guildset = client.getGuSett.get(interaction.guild.id)
+
+        if(!guildset) {
+            interaction.reply('The XP System is disabled through guild settings, a server owner should disable this command.')
+            return;
+        }
+        if(guildset.enableXP === "true") {
+            interaction.reply('The XP System is disabled through guild settings, a server owner should disable this command.')
+            return;
+        }
+
+	    client.getScore = sql.prepare("SELECT * FROM scores WHERE user = ? AND guild = ?");
+
+        let score;
+
+        if(interaction.guild) {
+            score = client.getScore.get(user.id, interaction.guild.id);
+
+            if(!score) {
+                score = { id: `${interaction.guild.id}-${user.id}`, user: user.id, guild: interaction.guild.id, points: 0, level: 0 };
+            }
+
+            var nextLevel = score.level+1;
+            //Basically it's score.level +1 divided by 0.1 to the power of 2
+            var pointsNeed = Math.floor(Math.pow(((score.level+1)/0.1), 2));
+            const embed = new MessageEmbed()
+                .setTitle(user.username+"'s Points")
+                .addField("Current Level", score.level.toString(), true)
+                .addField("Points", score.points.toString(), true)
+                .addField("Next Level", nextLevel.toString(), true)
+                .addField("Points needed for level "+nextLevel.toString(), pointsNeed.toString()+' points', true)
+                .setFooter('Requested by '+interaction.user.username)
+                .setColor(embedColor);
+            interaction.reply({ embeds: [embed] })
+        }
+	}
 };

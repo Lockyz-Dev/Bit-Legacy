@@ -1,50 +1,13 @@
 {
-  "name": "joiboi-canary",
-  "version": "2.0.0",
-  "dev": "Lockyz Dev",
-  "description": "A multipurpose bot, Joiboi is created to make the lives of everyone on Discord better.",
-  "main": "joiboiC.js",
-  "scripts": {
-    "start": "node .",
-    "test": "eslint .",
-    "lint": "eslint --fix .",
-    "prod": "SET NODE_ENV=production&&npm start",
-    "dev": "SET NODE_ENV=development&&nodemon"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/Lockyz-Dev/JoiBoi"
-  },
-  "author": "Lockyz <lochlanpainter@gmail.com>",
-  "license": "MIT",
-  "bugs": {
-    "url": "http://tracker.lockyzdev.net/"
-  },
-  "homepage": "https://lockyzdev.net/joiboi",
   "dependencies": {
-    "better-sqlite3": "^7.4.3",
-    "chalk": "^4.1.0",
-    "common-tags": "^1.8.0",
-    "discord-giveaways": "^4.0.2",
-    "discord.js": "^12.5.3",
-    "discord.js-poll-embed": "^1.0.2",
-    "dotenv-flow": "^0.1.0",
-    "enmap": "^4.8.7",
-    "godembed": "^1.0.4",
-    "humanize-duration": "^3.22.0",
-    "moment": "^2.24.0",
+    "@discordjs/rest": "^0.1.0-canary.0",
+    "better-sqlite3": "^7.5.1",
+    "discord-giveaways": "^5.0.1",
+    "discord.js": "^13.1.0",
+    "humanize-duration": "^3.27.1",
+    "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
-    "moment-timezone": "^0.5.28",
-    "ms": "^2.1.2",
-    "mysql": "^2.18.1",
-    "node-fetch": "^2.6.1",
-    "node-gyp": "^8.1.0",
-    "pokedex-promise-v2": "^3.3.2",
-    "ws": "^7.5.3",
-    "wumpus-slash": "^1.0.2"
-  },
-  "devDependencies": {
-    "babel-eslint": "^10.0.1",
-    "eslint": "^5.6.1"
+    "ms": "^2.1.3",
+    "owospeak": "^1.0.3"
   }
 }

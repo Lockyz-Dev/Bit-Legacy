@@ -1,41 +1,50 @@
-const { MessageEmbed } = require("discord.js");
-const { embedColor } = require("../info.js");
-const { noBotPerms } = require("../utils/errors");
-const Discord = require("discord.js");
+const { SlashCommandBuilder } = require('@discordjs/builders');
+const {MessageEmbed} = require('discord.js')
+const locale = require('../locale/en-US.json')
 
-exports.run = async (client, message, args) => {
+module.exports = {
+	data: new SlashCommandBuilder()
+		.setName('8ball')
+		.setDescription('Ask the 8ball a question and get an answer STRAIGHT from the cosmos. (Results Vary)')
+		.addStringOption((option) => 
+			option
+				.setName('question')
+				.setDescription('The important question you want answered.')
+				.setRequired(true)
+		),
+	async execute(interaction) {
 
-    let perms = message.guild.me.permissions;
-    if (!perms.has("EMBED_LINKS")) return noBotPerms(message, "EMBED_LINKS");
+        const question = interaction.options.getString('question');
+            var roll = [
+                "id-01",
+                "id-02",
+                "id-03",
+                "id-04",
+                "id-05",
+                "id-06",
+                "id-07",
+                "id-08",
+                "id-09",
+                "id-10",
+                "id-11",
+                "id-12",
+                "id-13",
+                "id-14",
+                "id-15",
+                "id-16",
+                "id-17",
+                "id-18",
+                "id-19",
+                "id-20"
+            ]
 
-    message.delete(1000);
-    var roll = [
-      "Yes",
-      "No",
-      "Likely",
-      "Not Likely",
-      "I can't give an answer now"
-  ]
-    const sayMessage = args.join(" ");
-    if(!sayMessage) {
-    return message.channel.send("You didn't ask a question")}
-    var randomAnswer = roll[Math.floor(Math.random() * roll.length)];
-    const infoEmbed = new MessageEmbed()
-	    .setAuthor(client.user.username, client.user.avatarURL())
-        .setTitle("8ball")
-        .addField(`${sayMessage}`, `${randomAnswer}`)
-	    .setColor(embedColor)
-	    .setTimestamp();
-    message.channel.send(infoEmbed);
-};
-
-exports.help = {
-    name: "8ball",
-    aliases: [],
-    description: "Get the answer to a yes or no question from the all wise magic 8ball.",
-    usage: "8ball {question}",
-    premium: "false",
-    metrics: "true",
-    category: "fun",
-    datause: "false"
+            var answer = roll[Math.floor(Math.random()* roll.length)];
+            const embed = new MessageEmbed()
+                .setTitle(locale.magicBallName)
+                .setDescription(locale.magicBallDescription)
+                .addField(question, '\u200b')
+                .setImage("https://db.lockyzdev.net/bots/commands/8ball/"+answer+".png")
+                .setTimestamp();
+            interaction.reply({ embeds: [embed] })
+		}
 };
