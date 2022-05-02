@@ -57,13 +57,13 @@ module.exports = {
                 )
         ),
 	async execute(interaction) {
-        const user = interaction.options.getUser('user')
-        const reason = interaction.options.getString('reason')
-        const customReason = interaction.options.getString('custom_reason')
-        const sendCustomReason = interaction.options.getString('send_reason')
-        const member = interaction.guild.members.cache.get(user.id)
-        const client = interaction.client
-        var reason1 = "Banned by "+interaction.user.username
+        const user = interaction.options.getUser('user');
+        const reason = interaction.options.getString('reason');
+        const customReason = interaction.options.getString('custom_reason');
+        const sendCustomReason = interaction.options.getString('send_reason');
+        const member = interaction.guild.members.cache.get(user.id);
+        const client = interaction.client;
+        var reason1 = "Banned by "+interaction.user.username;
 
         if(interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR) || interaction.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD) || interaction.member.permissions.has(Permissions.FLAGS.BAN_MEMBERS)) {
             if(customReason) {

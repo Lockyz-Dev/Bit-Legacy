@@ -24,9 +24,9 @@ module.exports = {
 				)
 		),
 	async execute(interaction) {
-            const user = interaction.options.getUser('user')
-            const help = interaction.options.getString('help')
-			var user1 = interaction.user.username
+            const user = interaction.options.getUser('user');
+            const help = interaction.options.getString('help');
+			var user1 = interaction.user.username;
 
             if(help === "true") {
                 interaction.reply({content: locale.impostorInfo})

@@ -27,7 +27,7 @@ module.exports = {
             client.getUsSett = sql.prepare("SELECT * FROM userSettings WHERE userID = ?");
             let userset = client.getUsSett.get(user.id)
 
-            if(userset.userAccess = 0) {
+            if(userset.userAccess === "true") {
                 interaction.reply({ content: 'This user has disabled access to their account, only showing you basic information.'})
                 usAcc = "false"
             } else {

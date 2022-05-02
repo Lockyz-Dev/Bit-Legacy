@@ -42,8 +42,7 @@ module.exports = {
 				embed.addField('Old Category', oparent, true)
 				embed.addField('Category', nparent, true)
 				embed.addField('\u200B', '\u200B', true)
-			} else if(!oldChannel.parent) {
-			} else {
+			} else if(oldChannel.parent) {
 				embed.addField('Category', oldChannel.parent.name, true)
 			}
 			if(newChannel.type) {
