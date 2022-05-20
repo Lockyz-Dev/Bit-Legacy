@@ -2,9 +2,7 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
 const { embedColor, ownerID } = require('../config');
 const SQLite = require("better-sqlite3");
-const messageCreate = require('../events/messageCreate');
 const sql = new SQLite('./bot.sqlite');
-const locale = require('../locale/en-US.json')
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -12,16 +10,26 @@ module.exports = {
 		.setDescription('Get current top 10 point leaders.'),
 	async execute(interaction) {
         const client = interaction.client
-
-		client.getGuSett = sql.prepare("SELECT * FROM guildFeatures WHERE guildID = ?");
+        var lan = 'en'
+        client.getGuSett = sql.prepare("SELECT * FROM guildFeatures WHERE guildID = ?");
         let guildset = client.getGuSett.get(interaction.guild.id)
 
+        client.getUsSett = sql.prepare("SELECT * FROM userSettings WHERE userID = ?");
+        let userset = client.getUsSett.get(interaction.user.id)
+
+        if(userset) {
+            if(userset.language) {
+                lan = userset.language;
+            }
+        }
+        const locale = require('../locale/'+lan+'.json')
+
         if(!guildset) {
-            interaction.reply('The XP System is disabled through guild settings, a server owner should disable this command.')
+            interaction.reply({ content: locale.xpDisabled})
             return;
         }
-        if(guildset.enableXP === "true") {
-            interaction.reply('The XP System is disabled through guild settings, a server owner should disable this command.')
+        if(guildset.enableXP !== "true") {
+            interaction.reply({ content: locale.xpDisabled})
             return;
         }
 

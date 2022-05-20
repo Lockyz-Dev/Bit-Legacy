@@ -1,5 +1,6 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const locale = require('../locale/en-US.json')
+const SQLite = require("better-sqlite3");
+const sql = new SQLite('./bot.sqlite');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -24,15 +25,26 @@ module.exports = {
 				)
 		),
 	async execute(interaction) {
-            const user = interaction.options.getUser('user');
-            const help = interaction.options.getString('help');
+        const client = interaction.client
+        var lan = 'en'
+        client.getUsSett = sql.prepare("SELECT * FROM userSettings WHERE userID = ?");
+        let userset = client.getUsSett.get(interaction.user.id)
+
+        if(userset) {
+            if(userset.language) {
+                lan = userset.language;
+            }
+        }
+        const locale = require('../locale/'+lan+'.json')
+            const user = interaction.options.getUser('user')
+            const help = interaction.options.getString('help')
 			var user1 = interaction.user.username;
 
             if(help === "true") {
                 interaction.reply({content: locale.impostorInfo})
             } else {
 				if(user) {
-					user1 = user.username
+					user1 = user.username;
 				}
 				
 				var randomAnswer = (Math.random() * 100 <= 1 ? locale.impostorTextImpost.replace('{user}', user1) : locale.impostorTextNot.replace('{user}', user1))

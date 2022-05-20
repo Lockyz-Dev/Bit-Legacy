@@ -11,13 +11,13 @@ module.exports = {
 
 		client.getChSett = sql.prepare("SELECT * FROM channelSettings WHERE guildID = ?");
 		client.getGuSett = sql.prepare("SELECT * FROM guildFeatures WHERE guildID = ?");
-		client.setGuSett = sql.prepare("INSERT OR REPLACE INTO guildFeatures (guildID, enableLogging, enableWelcome, enableXP, enableRoleOnJoin) VALUES (@guildID, @enableLogging, @enableWelcome, @enableXP, @enableRoleOnJoin);");
+		client.setGuSett = sql.prepare("INSERT OR REPLACE INTO guildFeatures (guildID, enableLogging, enableWelcome, enableXP, enableRoleOnJoin, enableBoosts, enableLeave) VALUES (@guildID, @enableLogging, @enableWelcome, @enableXP, @enableRoleOnJoin, @enableBoosts, @enableLeave);");
 
 		let chanset = client.getChSett.get(message.guild.id)
 		let guildset = client.getGuSett.get(message.guild.id)
 		
 		if(!guildset) {
-			guildset = { guildID: message.guild.id, enableLogging: 'false', enableWelcome: 'false', enableXP: 'false', enableRoleOnJoin: 'false' }
+			guildset = { guildID: message.guild.id, enableLogging: 'false', enableWelcome: 'false', enableXP: 'false', enableRoleOnJoin: 'false', enableBoosts: 'false', enableLeave: 'true' }
 			client.setGuSett.run(guildset);
 		}
 
@@ -26,7 +26,6 @@ module.exports = {
 			const embed0 = new MessageEmbed()
 				.setAuthor("Message Deleted | "+message.author.username, message.author.avatarURL())
 				.setColor(embedColor)
-				.setDescription('[Jump To]('+message.url+')')
 				.addField('Channel', '<#'+message.channel.id+'>', true)
 				.addField('Author', '<@'+message.author.id+'>', true)
 				.addField('Message Created', '<t:'+Math.floor(new Date(message.createdAt).getTime() / 1000)+'>', true)

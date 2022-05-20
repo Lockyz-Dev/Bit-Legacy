@@ -9,13 +9,13 @@ module.exports = {
 		const client = newRole.client
 		client.getChSett = sql.prepare("SELECT * FROM channelSettings WHERE guildID = ?");
 		client.getGuSett = sql.prepare("SELECT * FROM guildFeatures WHERE guildID = ?");
-		client.setGuSett = sql.prepare("INSERT OR REPLACE INTO guildFeatures (guildID, enableLogging, enableWelcome, enableXP, enableRoleOnJoin) VALUES (@guildID, @enableLogging, @enableWelcome, @enableXP, @enableRoleOnJoin);");
+		client.setGuSett = sql.prepare("INSERT OR REPLACE INTO guildFeatures (guildID, enableLogging, enableWelcome, enableXP, enableRoleOnJoin, enableBoosts, enableLeave) VALUES (@guildID, @enableLogging, @enableWelcome, @enableXP, @enableRoleOnJoin, @enableBoosts, @enableLeave);");
 
 		let chanset = client.getChSett.get(newRole.guild.id)
 		let guildset = client.getGuSett.get(newRole.guild.id)
 		
 		if(!guildset) {
-			guildset = { guildID: newRole.guild.id, enableLogging: 'false', enableWelcome: 'false', enableXP: 'false', enableRoleOnJoin: 'false' }
+			guildset = { guildID: newRole.guild.id, enableLogging: 'false', enableWelcome: 'false', enableXP: 'false', enableRoleOnJoin: 'false', enableBoosts: 'false', enableLeave: 'true' }
 			client.setGuSett.run(guildset);
 		}
 

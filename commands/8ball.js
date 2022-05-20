@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const {MessageEmbed} = require('discord.js')
-const locale = require('../locale/en-US.json')
+const SQLite = require("better-sqlite3");
+const sql = new SQLite('./bot.sqlite');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -13,37 +14,48 @@ module.exports = {
 				.setRequired(true)
 		),
 	async execute(interaction) {
+        const client = interaction.client
+        var lan = 'en'
+        client.getUsSett = sql.prepare("SELECT * FROM userSettings WHERE userID = ?");
+        let userset = client.getUsSett.get(interaction.user.id)
+
+        if(userset) {
+            if(userset.language) {
+                lan = userset.language;
+            }
+        }
+        const locale = require('../locale/'+lan+'.json')
 
         const question = interaction.options.getString('question');
             var roll = [
-                "id-01",
-                "id-02",
-                "id-03",
-                "id-04",
-                "id-05",
-                "id-06",
-                "id-07",
-                "id-08",
-                "id-09",
-                "id-10",
-                "id-11",
-                "id-12",
-                "id-13",
-                "id-14",
-                "id-15",
-                "id-16",
-                "id-17",
-                "id-18",
-                "id-19",
-                "id-20"
+                ["01", locale.magicBallAnswer01],
+                ["02", locale.magicBallAnswer02],
+                ["03", locale.magicBallAnswer03],
+                ["04", locale.magicBallAnswer04],
+                ["05", locale.magicBallAnswer05],
+                ["06", locale.magicBallAnswer06],
+                ["07", locale.magicBallAnswer07],
+                ["08", locale.magicBallAnswer08],
+                ["09", locale.magicBallAnswer09],
+                ["10", locale.magicBallAnswer10],
+                ["11", locale.magicBallAnswer11],
+                ["12", locale.magicBallAnswer12],
+                ["13", locale.magicBallAnswer13],
+                ["14", locale.magicBallAnswer14],
+                ["15", locale.magicBallAnswer15],
+                ["16", locale.magicBallAnswer16],
+                ["17", locale.magicBallAnswer17],
+                ["18", locale.magicBallAnswer18],
+                ["19", locale.magicBallAnswer19],
+                ["20", locale.magicBallAnswer20]
             ]
 
             var answer = roll[Math.floor(Math.random()* roll.length)];
             const embed = new MessageEmbed()
                 .setTitle(locale.magicBallName)
                 .setDescription(locale.magicBallDescription)
-                .addField(question, '\u200b')
-                .setImage("https://db.lockyzdev.net/bots/commands/8ball/"+answer+".png")
+                .addField(question, answer[1])
+                .setImage("https://db.lockyzdev.net/bots/commands/8ball/id-"+answer[0]+".png")
                 .setTimestamp();
             interaction.reply({ embeds: [embed] })
 		}

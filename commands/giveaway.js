@@ -1,7 +1,8 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, Permissions } = require('discord.js');
 const ms = require("ms");
-const locale = require('../locale/en-US.json')
+const SQLite = require("better-sqlite3");
+const sql = new SQLite('./bot.sqlite');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -83,6 +84,16 @@ module.exports = {
 	async execute(interaction) {
         const client = interaction.client
         const member = interaction.member
+        var lan = 'en'
+        client.getUsSett = sql.prepare("SELECT * FROM userSettings WHERE userID = ?");
+        let userset = client.getUsSett.get(interaction.user.id)
+
+        if(userset) {
+            if(userset.language) {
+                lan = userset.language;
+            }
+        }
+        const locale = require('../locale/'+lan+'.json')
 
         if(member.roles.cache.some(role => role.name === 'Giveaway Manager') || member.permissions.has(Permissions.FLAGS.ADMINISTRATOR)) {
             if(interaction.options.getSubcommand() === 'create') {
@@ -98,54 +109,54 @@ module.exports = {
                     botsCanWin: false,
                     lastChance: {
                         enabled: true,
-                        content: '⚠️ **LAST CHANCE TO ENTER !** ⚠️',
+                        content: locale.giveawayLastChance,
                         threshold: 5000,
                         embedColor: '#FF0000'
                     }
                 }).then((gData) => {
-                    interaction.reply({ content: 'Giveaway Started! '})
+                    interaction.reply({ content: locale.giveawayStarted})
                 })
             } else if (interaction.options.getSubcommand() === 'end') {
                 const messageId = interaction.options.getString('message_id')
                 const giveaway = client.giveawaysManager.giveaways.find((g) => g.guildId === interaction.guildId && g.messageId === interaction.options.getString('message_id'))
                 
                 if(!giveaway){
-                    interaction.reply({ content: 'Unable to find the giveaway you\'re looking for.'})
+                    interaction.reply({ content: locale.giveawayNotFound })
                     return;
                 }
 
                 client.giveawaysManager.end(messageId).then(() => {
-                    interaction.reply({ content: 'Success! Giveaway Ended!' });
+                    interaction.reply({ content: locale.giveawayEndCommand });
                 }).catch((err) => {
-                    interaction.reply({ content: 'An error has occured, please try again\n`'+err+'`'})
+                    interaction.reply({ content: locale.errorDefault.replace('{error}', err)})
                 })
             } else if(interaction.options.getSubcommand() === 'pause') {
                 const messageId = interaction.options.getString('message_id')
                 const giveaway = client.giveawaysManager.giveaways.find((g) => g.guildId === interaction.guildId && g.messageId === interaction.options.getString('message_id'))
                 
                 if(!giveaway){
-                    interaction.reply({ content: 'Unable to find the giveaway you\'re looking for.'})
+                    interaction.reply({ content: locale.giveawayNotFound })
                     return;
                 }
 
                 client.giveawaysManager.pause(messageId).then(() => {
-                    interaction.reply({ content: 'Success! Giveaway Paused!' });
+                    interaction.reply({ content: locale.giveawayPauseCommand });
                 }).catch((err) => {
-                    interaction.reply({ content: 'An error has occured, please try again\n`'+err+'`'})
+                    interaction.reply({ content: locale.errorDefault.replace('{error}', err)})
                 })
             } else if(interaction.options.getSubcommand() === 'unpause') {
                 const messageId = interaction.options.getString('message_id')
                 const giveaway = client.giveawaysManager.giveaways.find((g) => g.guildId === interaction.guildId && g.messageId === interaction.options.getString('message_id'))
                 
                 if(!giveaway){
-                    interaction.reply({ content: 'Unable to find the giveaway you\'re looking for.'})
+                    interaction.reply({ content: locale.giveawayNotFound})
                     return;
                 }
 
                 client.giveawaysManager.unpause(messageId).then(() => {
-                    interaction.reply({ content: 'Success! Giveaway Unpaused!' });
+                    interaction.reply({ content: locale.giveawayUnpauseCommand });
                 }).catch((err) => {
-                    interaction.reply({ content: 'An error has occured, please try again\n`'+err+'`'})
+                    interaction.reply({ content: locale.errorDefault.replace('{error}', err)})
                 })
             } else if(interaction.options.getSubcommand() === 'reroll') {
                 const messageId = interaction.options.getString('message_id')
@@ -153,18 +164,18 @@ module.exports = {
                 const giveaway = client.giveawaysManager.giveaways.find((g) => g.guildId === interaction.guildId && g.messageId === interaction.options.getString('message_id'))
                 
                 if(!giveaway){
-                    interaction.reply({ content: 'Unable to find the giveaway you\'re looking for.'})
+                    interaction.reply({ content: locale.giveawayNotFound})
                     return;
                 }
 
                 client.giveawaysManager.reroll(messageId).then(() => {
-                    interaction.reply({ content: 'Success! Giveaway Rerolled!' });
+                    interaction.reply({ content: locale.giveawayRerollCommand });
                 }).catch((err) => {
-                    interaction.reply({ content: 'An error has occured, please try again\n`'+err+'`'})
+                    interaction.reply({ content: locale.errorDefault.replace('{error}', err)})
                 })
             }
         } else {
-            interaction.reply({ content: 'You don\'t have permission to use this command' })
+            interaction.reply({ content: locale.noPermission })
         }
 	}
 };

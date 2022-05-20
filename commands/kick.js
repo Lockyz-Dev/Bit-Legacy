@@ -1,6 +1,7 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, Permissions } = require('discord.js')
-const locale = require('../locale/en-US.json')
+const SQLite = require("better-sqlite3");
+const sql = new SQLite('./bot.sqlite');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -57,35 +58,45 @@ module.exports = {
                 )
         ),
 	async execute(interaction) {
+        const client = interaction.client
+        var lan = 'en'
+        client.getUsSett = sql.prepare("SELECT * FROM userSettings WHERE userID = ?");
+        let userset = client.getUsSett.get(interaction.user.id)
+
+        if(userset) {
+            if(userset.language) {
+                lan = userset.language;
+            }
+        }
+        const locale = require('../locale/'+lan+'.json')
         const user = interaction.options.getUser('user')
         const reason = interaction.options.getString('reason')
         const customReason = interaction.options.getString('custom_reason')
         const sendCustomReason = interaction.options.getString('send_reason')
         const member = interaction.guild.members.cache.get(user.id)
-        const client = interaction.client
-        var reason1 = "Kicked by "+interaction.user.username
+        var reason1 = "Kicked by "+interaction.user.username;
 
         if(interaction.member.permissions.has(Permissions.FLAGS.ADMINISTRATOR) || interaction.member.permissions.has(Permissions.FLAGS.MANAGE_GUILD) || interaction.member.permissions.has(Permissions.FLAGS.BAN_MEMBERS) || interaction.member.permissions.has(Permissions.FLAGS.KICK_MEMBERS)) {
             if(customReason) {
                 if(sendCustomReason === "true") {
                     client.channels.cache.get('906706193924386846').send({ content: "Someone used a custom reason. The reason is `"+customReason+"`" })
                 }
-                reason1 = "Kicked by "+interaction.user.username+" for "+customReason
+                reason1 = locale.kickReasonAdded.replace('{user}', interaction.user.username).replace('{reason}', customReason)
             } else {
                 if(!reason) {
-                    reason1 = "Kicked by "+interaction.user.username
+                    reason1 = locale.kickReasonDefault.replace('{user}', interaction.user.username)
                 } else {
-                    reason1 = "Kicked by "+interaction.user.username+" for "+reason
+                    reason1 = locale.kickReasonAdded.replace('{user}', interaction.user.username).replace('{reason}', reason)
                 }
             }
             if(!member.kickable) {
-                interaction.reply({ content: 'Either my role is too low to Kick this user or they have some sort of magical power.' })
+                interaction.reply({ content: locale.kickUnkickable })
             } else {
                 member.kick({ reason: reason1 })
-                interaction.reply({ content: 'Done' })
+                interaction.reply({ content: locale.kickReasonAddedResponse.replace('{user}', member.username).replace('{reason}', reason1) })
             }
         } else {
-            interaction.reply({ content: 'You don\'t have the permission to use this command.' })
+            interaction.reply({ content: locale.noPermission })
         }
 	}
 };

@@ -11,13 +11,13 @@ module.exports = {
 		client.getChSett = sql.prepare("SELECT * FROM channelSettings WHERE guildID = ?");
 		client.setChSett = sql.prepare("INSERT OR REPLACE INTO channelSettings (guildID, loggingChannel, welcomeChannel) VALUES (@guildID, @loggingChannel, @welcomeChannel);");
 		client.getGuSett = sql.prepare("SELECT * FROM guildFeatures WHERE guildID = ?");
-		client.setGuSett = sql.prepare("INSERT OR REPLACE INTO guildFeatures (guildID, enableLogging, enableWelcome, enableXP, enableRoleOnJoin) VALUES (@guildID, @enableLogging, @enableWelcome, @enableXP, @enableRoleOnJoin);");
+		client.setGuSett = sql.prepare("INSERT OR REPLACE INTO guildFeatures (guildID, enableLogging, enableWelcome, enableXP, enableRoleOnJoin, enableBoosts, enableLeave) VALUES (@guildID, @enableLogging, @enableWelcome, @enableXP, @enableRoleOnJoin, @enableBoosts, @enableLeave);");
 
 		let chanset = client.getChSett.get(newChannel.guild.id)
 		let guildset = client.getGuSett.get(newChannel.guild.id)
 
 		if(!guildset) {
-			guildset = { guildID: newChannel.guild.id, enableLogging: 'false', enableWelcome: 'false', enableXP: 'false', enableRoleOnJoin: 'false' }
+			guildset = { guildID: newChannel.guild.id, enableLogging: 'false', enableWelcome: 'false', enableXP: 'false', enableRoleOnJoin: 'false', enableBoosts: 'false', enableLeave: 'true' }
 			client.setGuSett.run(guildset);
 		}
 

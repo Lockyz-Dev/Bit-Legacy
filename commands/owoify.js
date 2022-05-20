@@ -2,7 +2,8 @@ const { SlashCommandBuilder } = require('@discordjs/builders');
 const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js')
 const { embedColor, ownerID } = require('../config');
 const owospeak = require("owospeak");
-const locale = require('../locale/en-US.json')
+const SQLite = require("better-sqlite3");
+const sql = new SQLite('./bot.sqlite');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -16,11 +17,19 @@ module.exports = {
         ),
 	async execute(interaction) {
         const client = interaction.client
+        var lan = 'en'
+        client.getUsSett = sql.prepare("SELECT * FROM userSettings WHERE userID = ?");
+        let userset = client.getUsSett.get(interaction.user.id)
+
+        if(userset) {
+            if(userset.language) {
+                lan = userset.language;
+            }
+        }
+        const locale = require('../locale/'+lan+'.json')
         const message = interaction.options.getString('message_id');
 
-        //const uwuify = new uwuifier();
-
-        interaction.reply({ content: owospeak.convert('Give me just a second senpai-san. I enjoy it when you use me.', { stutter: true, tilde: true }) })
+        interaction.reply({ content: owospeak.convert(locale.owoWait, { stutter: true, tilde: true }) })
 
         setTimeout(function(){
             interaction.channel.messages.fetch(message)

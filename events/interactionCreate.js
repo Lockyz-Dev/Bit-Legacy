@@ -1,3 +1,5 @@
+const { MessageEmbed } = require('discord.js');
+const { embedColor, ownerID } = require('../config');
 const SQLite = require("better-sqlite3");
 const sql = new SQLite('./bot.sqlite');
 
@@ -16,7 +18,7 @@ module.exports = {
         try {
             command.execute(interaction);
             client.getUsSett = sql.prepare("SELECT * FROM userSettings WHERE userID = ?");
-            client.setUsSett = sql.prepare("INSERT OR REPLACE INTO userSettings (userID, userAccess, levelNotifications, showNews) VALUES (@userID, @userAccess, @levelNotifications, @showNews);");
+            client.setUsSett = sql.prepare("INSERT OR REPLACE INTO userSettings (userID, userAccess, levelNotifications, showNews, language) VALUES (@userID, @userAccess, @levelNotifications, @showNews, @language);");
             let userset = client.getUsSett.get(interaction.user.id)
 
             if(!userset) {
@@ -25,13 +27,13 @@ module.exports = {
             client.setUsSett.run(userset);
 
             if(userset.showNews === 'true') {
-                let inputDate = '2022-04-20T15:00:00'
+                let inputDate = '2022-05-18T15:00:00'
 
                 let endDate = Math.round(new Date(inputDate ) / 1000);
                 let cuurentDate = Math.round(new Date() / 1000)
 
                 if(cuurentDate <= endDate) {
-                    interaction.channel.send({ content: 'We\'ve added settings, XP, server logs and MORE. You can enable features using the settings command *Press the `/` key on your keyboard to access slash commands*\n(This message will no longer appear at <t:'+endDate+'>)\n`You can turn news messages off using the settings command`'});
+                    interaction.channel.send({ content: 'We\'ve made quite a LOT of changes in this update, check them out in our Discord Server.\nThis will automatically be disabled on <t:'+endDate+'>\nYou can disable news in the user settings command'});
                 }
             }
         } catch (error) {

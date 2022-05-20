@@ -11,13 +11,13 @@ module.exports = {
 
 		client.getChSett = sql.prepare("SELECT * FROM channelSettings WHERE guildID = ?");
 		client.getGuSett = sql.prepare("SELECT * FROM guildFeatures WHERE guildID = ?");
-		client.setGuSett = sql.prepare("INSERT OR REPLACE INTO guildFeatures (guildID, enableLogging, enableWelcome, enableXP, enableRoleOnJoin) VALUES (@guildID, @enableLogging, @enableWelcome, @enableXP, @enableRoleOnJoin);");
+		client.setGuSett = sql.prepare("INSERT OR REPLACE INTO guildFeatures (guildID, enableLogging, enableWelcome, enableXP, enableRoleOnJoin, enableBoosts, enableLeave) VALUES (@guildID, @enableLogging, @enableWelcome, @enableXP, @enableRoleOnJoin, @enableBoosts, @enableLeave);");
 
 		let chanset = client.getChSett.get(member.guild.id)
 		let guildset = client.getGuSett.get(member.guild.id)
 		
 		if(!guildset) {
-			guildset = { guildID: member.guild.id, enableLogging: 'false', enableWelcome: 'false', enableXP: 'false', enableRoleOnJoin: 'false' }
+			guildset = { guildID: member.guild.id, enableLogging: 'false', enableWelcome: 'false', enableXP: 'false', enableRoleOnJoin: 'false', enableBoosts: 'false', enableLeave: 'true' }
 			client.setGuSett.run(guildset);
 		}
 
@@ -33,6 +33,12 @@ module.exports = {
 				.setTimestamp();
 			client.channels.cache.get(logsID).send({ embeds: [embed] })
 			return;
+		}
+
+		if(guildset.enableLeave === 'true') {
+			var leaveChan = chanset.leaveChannel
+
+			client.channels.cache.get(leaveChan).send({ content: member.username+' Left :(' })
 		}
 	}
 }

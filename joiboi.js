@@ -1,4 +1,5 @@
-const { Client, Collection, Intents } = require('discord.js');
+const { Client, Collection, Intents, MessageEmbed } = require('discord.js');
+const { embedColor, ownerID } = require('../config');
 const fs = require('fs');
 const { token } = require('./config.json');
 
@@ -68,13 +69,14 @@ console.log('🟢 LMB Welcome System Online')
 
 for (const file of loggingFiles) {
 	console.log('Loading LMB Logging System V2 Beta...')
-	const logging = require('./logging'+file);
+	const logging = require('./logging/'+file);
 	if (logging.once) {
 		client.once(logging.name, (...args) => logging.execute(...args));
 	} else {
 		client.on(logging.name, (...args) => logging.execute(...args));
 	}
 }
+
 console.log('🟢 LMB Logging System Online')
 
 client.login(token);
